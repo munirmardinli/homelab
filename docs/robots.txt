@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://homelab-docs.mardinli-gt.dev/sitemap.xml
