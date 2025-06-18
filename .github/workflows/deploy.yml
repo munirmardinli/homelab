@@ -37,15 +37,3 @@ jobs:
 
       - name: Deploy to docs branch
         run: mkdocs gh-deploy --force --clean --no-history --remote-branch docs
-
-      - name: Trigger Changelog Workflow
-        if: success()
-        uses: actions/github-script@v6
-        with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'changelog.yml',
-              ref: 'main'
-            })
