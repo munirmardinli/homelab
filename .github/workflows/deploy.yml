@@ -1,0 +1,51 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install mkdocs-material \
+            mkdocs-git-authors-plugin \
+            mkdocs-git-revision-date-localized-plugin \
+            mkdocs-git-committers-plugin-2
+
+      - name: Prepare Environment
+        run: |
+          sed -i 's/tags_file: tags.md/# tags_file: tags.md/' mkdocs.yml
+          echo "GH_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Deploy to docs branch
+        run: mkdocs gh-deploy --force --clean --no-history --remote-branch docs
+
+      - name: Trigger Changelog Workflow
+        if: success()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'changelog.yml',
+              ref: 'main'
+            })

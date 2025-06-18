@@ -1,0 +1,9 @@
+secrets
+public
+*.log
+*zip
+.cache
+__pycache__
+.mypy_cache
+.env
+docs/config/overrides/hooks/__pycache__/.*pyc
