@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://munirmardinli.github.io/homelab/sitemap.xml
