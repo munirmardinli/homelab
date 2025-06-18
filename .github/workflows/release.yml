@@ -47,7 +47,7 @@ jobs:
           mike set-default --push latest
 
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v3
+        uses: actions/deploy-pages@v4
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
