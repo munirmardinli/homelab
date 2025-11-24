@@ -1,0 +1,65 @@
+name: Setup Labels
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  setup-labels:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create Missing Labels
+        uses: actions/github-script@v8
+        with:
+          script: |
+            // ====================================
+            // All labels used in your labeler.yml
+            // ====================================
+            const allLabels = [
+              { name: "macos", color: "1e90ff", description: "Changes to macOS setup scripts (bash/darwin)" },
+              { name: "windows", color: "ffa500", description: "Changes to Windows PowerShell setup scripts" },
+              { name: "synology", color: "9400d3", description: "Changes to Synology CLI or automation scripts" },
+              { name: "bash-core", color: "2e8b57", description: "Changes to core Bash utils or main index.sh" },
+              { name: "windows-core", color: "ff6347", description: "Changes to core Windows utils or index.ps1" },
+              { name: "git-config", color: "708090", description: "Changes to Git global configuration files" },
+              { name: "config-files", color: "20b2aa", description: "Changes to .zsh, dotfiles, configs" },
+              { name: "compose", color: "8a2be2", description: "Changes to docker-compose, production, certs" },
+              { name: "workflow", color: "c0c0c0", description: "Changes to GitHub workflows or automation" },
+              { name: "documentation", color: "0075ca", description: "Changes to markdown or documentation files" },
+              { name: "utilities", color: "0e8a16", description: "Changes inside utils/ folder" },
+              { name: "environment", color: "ff1493", description: "Changes to .env or environment configuration" }
+            ];
+
+            // Get existing labels
+            const existingLabels = await github.rest.issues.listLabelsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+
+            const existingLabelNames = existingLabels.data.map(l => l.name);
+
+            // Create missing labels
+            for (const label of allLabels) {
+              if (!existingLabelNames.includes(label.name)) {
+                try {
+                  await github.rest.issues.createLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    ...label
+                  });
+                  console.log(`Created label: ${label.name}`);
+                } catch (error) {
+                  console.error(`Failed to create label ${label.name}:`, error.message);
+                }
+              } else {
+                console.log(`Label "${label.name}" already exists.`);
+              }
+            }

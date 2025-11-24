@@ -1,0 +1,37 @@
+---
+x-labels: &default-labels
+  com.centurylinklabs.watchtower.enable: true
+  recreat.container: true
+  container.label.group: management
+
+services:
+ checkmk:
+  image: checkmk/check-mk-raw:latest
+  container_name: checkmk
+  restart: always
+  tmpfs: /opt/omd/sites/cmk/tmp:uid=1000,gid=1000
+  ports:
+      - target: 5000
+        published: 8722
+        protocol: tcp
+        mode: host
+  environment:
+    # Username cmkadmin
+    CMK_PASSWORD: ${CMK_PASSWORD:?Passowrd is required}
+    TZ: ${TZ:-Europe/Berlin}
+    CMK_SITE_ID: ${CMK_SITE_ID:-cmk}
+  volumes:
+      - type: bind
+        source: ${MOUNT_PATH_DOCKER_ROOT:?path required}/production/checkmk
+        target: /omd/sites
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime
+        read_only: true
+  labels:
+    <<: *default-labels
+    monitoring: checkmk
+
+networks:
+  dockerization:
+    external: true

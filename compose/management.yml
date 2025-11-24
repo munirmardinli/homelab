@@ -1,0 +1,126 @@
+---
+x-labels: &default-labels
+  com.centurylinklabs.watchtower.enable: true
+  recreat.container: true
+  container.label.group: management
+
+x-limits: &resource-limits
+  mem_limit: 256m
+  mem_reservation: 64m
+  cpu_shares: "512"
+  restart: always
+  networks:
+    dockerization:
+
+services:
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    hostname: watchtower
+    <<: *resource-limits
+    environment:
+      UID: ${UID_NAS_ADMIN:-1026}
+      GID: ${GID_NAS_ADMIN:-100}
+      WATCHTOWER_CLEANUP: true
+      WATCHTOWER_LABEL_ENABLE: true
+      WATCHTOWER_INCLUDE_RESTARTING: true
+      WATCHTOWER_DEBUG: true
+      WATCHTOWER_ROLLING_RESTART: true
+      WATCHTOWER_INCLUDE_STOPPED: true
+      NO_COLOR: 1
+      WATCHTOWER_NO_SETUP_MESSAGE: true
+      WATCHTOWER_TIMEOUT: 30s
+      WATCHTOWER_NO_RESTART: false
+      WATCHTOWER_POLL_INTERVAL: 30
+      WATCHTOWER_HTTP_API_UPDATE: true
+      WATCHTOWER_HTTP_API_METRICS: true
+      WATCHTOWER_HTTP_API_PERIODIC_POLLS: true
+      DOCKER_TLS_VERIFY: true
+      WATCHTOWER_LOG_LEVEL: info
+      DOCKER_API_VERSION: 1.41
+      WATCHTOWER_REMOVE_VOLUMES: false
+      WATCHTOWER_TRACE: true
+      WATCHTOWER_HTTP_API_TOKEN: ${WATCHTOWER_HTTP_API_TOKEN:? Token is missing}
+      WATCHTOWER_NOTIFICATIONS: email
+      WATCHTOWER_NOTIFICATIONS_LEVEL: info
+      WATCHTOWER_NOTIFICATION_EMAIL_FROM: ${EMAIL:?Email address is required}
+      WATCHTOWER_NOTIFICATION_EMAIL_TO: ${EMAIL}
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER: smtp.mail.me.com
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT: 587
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER: ${EMAIL}
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD: ${ICLOUD_PASSWORD:?iCloud app password is required}
+      WATCHTOWER_NOTIFICATION_EMAIL_DELAY: 2
+      DOCKER_CONFIG: /root/.docker
+    ports:
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: host
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime
+        read_only: true
+      - type: bind
+        source: /root/.docker
+        target: /root/.docker
+        read_only: true
+    labels:
+      <<: *default-labels
+      monitoring: watchtower
+
+  autoheal:
+    image: willfarrell/autoheal
+    container_name: autoheal
+    hostname: autoheal
+    <<: *resource-limits
+    environment:
+      UID: ${UID_NAS_ADMIN:-1026}
+      GID: ${GID_NAS_ADMIN:-100}
+      AUTOHEAL_INTERVAL: 60s
+      AUTOHEAL_CONTAINER_LABEL: recreat.container
+      DOCKER_HOST: unix:///var/run/docker.sock
+      WEBHOOK_URL: https://gotify.${SYNOLOGY_BASIC_URL}/message?token=${WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN}
+      AUTOHEAL_ONLY_MONITOR_RUNNING: false
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime
+        read_only: true
+    labels:
+      <<: *default-labels
+      monitoring: autoheal
+
+  dashy:
+    container_name: dashy
+    hostname: dashy
+    image: ghcr.io/lissy93/dashy:latest
+    <<: *resource-limits
+    environment:
+      NODE_ENV: production
+      UID: ${UID_NAS_ADMIN:-1026}
+      GID: ${GID_NAS_ADMIN:-100}
+    ports:
+      - target: 8080
+        published: 90
+        protocol: tcp
+        mode: host
+    volumes:
+      - type: bind
+        source: ${MOUNT_PATH_DOCKER_ROOT}/compose/config/dashy.yml
+        target: /app/user-data/conf.yml
+    labels:
+      <<: *default-labels
+      monitoring: dashy
+
+networks:
+  dockerization:
+    external: true

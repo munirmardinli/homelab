@@ -1,0 +1,64 @@
+# ============================================
+#  Labeler rules for Synology Setup Repository
+# ============================================
+
+macos:
+  - changed-files:
+      - any-glob-to-any-file: "bash/darwin/**"
+
+windows:
+  - changed-files:
+      - any-glob-to-any-file: "bash/windows/**"
+
+synology:
+  - changed-files:
+      - any-glob-to-any-file: "bash/synology/**"
+
+bash-core:
+  - changed-files:
+      - any-glob-to-any-file: "bash/index.sh"
+      - any-glob-to-any-file: "bash/utils/**"
+      - any-glob-to-any-file: "bash/.config/**"
+
+windows-core:
+  - changed-files:
+      - any-glob-to-any-file: "bash/windows/index.ps1"
+      - any-glob-to-any-file: "bash/windows/utils/**"
+
+git-config:
+  - changed-files:
+      - any-glob-to-any-file: "bash/**/globaly.*"
+      - any-glob-to-any-file: "**/.gitconfig"
+
+config-files:
+  - changed-files:
+      - any-glob-to-any-file: "bash/**/*.zsh"
+      - any-glob-to-any-file: "bash/**/*.zshrc"
+      - any-glob-to-any-file: "bash/.config/**"
+
+compose:
+  - changed-files:
+      - any-glob-to-any-file: "compose/**"
+      - any-glob-to-any-file: "production/**"
+      - any-glob-to-any-file: "certs/**"
+      - any-glob-to-any-file: "Dockerfile*"
+      - any-glob-to-any-file: "docker-compose*.yml"
+
+workflow:
+  - changed-files:
+      - any-glob-to-any-file: ".github/workflows/**"
+      - any-glob-to-any-file: ".github/actions/**"
+      - any-glob-to-any-file: ".github/**/*.yml"
+      - any-glob-to-any-file: ".github/**/*.yaml"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: "**/*.md"
+
+utilities:
+  - changed-files:
+      - any-glob-to-any-file: "utils/**"
+
+environment:
+  - changed-files:
+      - any-glob-to-any-file: ".env*"

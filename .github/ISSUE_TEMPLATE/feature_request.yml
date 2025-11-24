@@ -1,0 +1,56 @@
+name: ✨ Feature Request
+description: Suggest a new feature or improvement for the setup scripts (macOS, Windows, Synology, Docker, GitHub Actions)
+title: "[Feature] "
+labels: ["type: enhancement"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ✨ Feature Request
+        Please describe the feature you would like to see.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What problem does this feature solve? What should be added or improved?
+      placeholder: |
+        Examples:
+        - "Add support for automatic SSH key deployment for Synology."
+        - "Improve logging in bash/utils to show timestamps."
+        - "Add a Windows version of config.ps1 for applying user settings."
+      validations:
+        required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Are there any existing workarounds or alternative approaches?
+      placeholder: |
+        Examples:
+        - "I currently run this manually through PowerShell."
+        - "I workaround this by modifying the script locally."
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: Design / Examples
+      description: Provide example commands, pseudocode, or a rough plan
+      placeholder: |
+        Example:
+        ```
+        # Proposal (optional)
+        ./bash/synology/new-setup.sh --auto-login
+        ```
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - "🔥 Urgent (Critical improvement)"
+        - "⭐ High (Important functionality)"
+        - "🔄 Medium (Nice to have)"
+        - "🟦 Low (Minor improvement)"

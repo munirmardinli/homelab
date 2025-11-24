@@ -1,0 +1,33 @@
+---
+x-labels: &default-labels
+  com.centurylinklabs.watchtower.enable: true
+  recreat.container: true
+  container.label.group: game
+
+services:
+  retroassembly:
+    image: arianrhodsandlot/retroassembly:latest
+    container_name: retroassembly
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 8000 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 90s  
+    ports: 
+     - target: 8000
+       published: 4235
+       protocol: tcp
+       mode: host
+    volumes: 
+     - ${MOUNT_PATH_DOCKER_ROOT:?path required}/production/retroassembly:/app/data:rw
+    networks:
+      dockerization:
+    labels:
+      <<: *default-labels
+      monitoring: retroassembly
+
+networks:
+  dockerization:
+    external: true

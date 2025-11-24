@@ -1,0 +1,40 @@
+name: 🔍 Security Scans (Shell, Docker, PowerShell)
+
+on:
+  push:
+    branches: ["main", "develop", "qa"]
+  pull_request:
+    branches: ["main", "develop", "qa"]
+  schedule:
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  shellcheck:
+    name: Shell Script Security (ShellCheck)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install ShellCheck
+        run: sudo apt-get install -y shellcheck
+      - name: Run ShellCheck
+        run: |
+          echo "📄 Checking all .sh files..."
+          shopt -s globstar
+          shellcheck **/*.sh || true
+
+  dockerfile:
+    name: Dockerfile Security (Hadolint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Hadolint
+        run: sudo wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64 && sudo chmod +x /usr/local/bin/hadolint
+      - name: Run Hadolint
+        run: |
+          echo "🐳 Checking Dockerfiles..."
+          find . -name "Dockerfile*" -print0 | xargs -0 -I{} hadolint {}

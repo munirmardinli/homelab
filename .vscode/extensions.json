@@ -1,0 +1,18 @@
+{
+	"recommendations": [
+		"eyhn.vscode-vibrancy",
+		"foxundermoon.shell-format",
+		"Catppuccin.catppuccin-vsc",
+		"Catppuccin.catppuccin-vsc-icons",
+		"ms-azuretools.vscode-containers",
+		"ms-azuretools.vscode-docker",
+		"MS-CEINTL.vscode-language-pack-de",
+		"eamodio.gitlens",
+		"enkia.tokyo-night",
+		"steoates.autoimport",
+		"usernamehw.errorlens",
+		"yoavbls.pretty-ts-errors",
+		"mechatroner.rainbow-csv",
+		"redhat.vscode-yaml"
+	]
+}
