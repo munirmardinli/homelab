@@ -22,35 +22,13 @@ run() {
 }
 
 # -------------------------------------------------------
-# Detect OS
+# Run Darwin and Synology sequentially, remove Windows
 # -------------------------------------------------------
 
-OS="$(uname -s)"
-info "Detected OS: $OS"
+info "Running macOS Setup..."
+run "$BASE/darwin/index.sh"
 
-case "$OS" in
-  Darwin)
-    info "Running macOS Setup..."
-    run "$BASE/darwin/index.sh"
-    ;;
+info "Running Synology Setup..."
+run "$BASE/synology/index.sh"
 
-  Linux)
-    # Synology detected?
-    if uname -a | grep -qi synology; then
-      info "Running Synology Setup..."
-      run "$BASE/synology/index.sh"
-    else
-      warn "Linux detected but no linux setup implemented."
-    fi
-    ;;
-
-  MINGW*|MSYS*|CYGWIN*|Windows_NT)
-    info "Running Windows Setup (PowerShell)..."
-    pwsh "$BASE/index.ps1"
-    ;;
-
-  *)
-    err "Unsupported OS: $OS"
-    exit 1
-    ;;
-esac
+ok "Setup completed successfully."
