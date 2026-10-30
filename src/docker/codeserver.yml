@@ -1,0 +1,45 @@
+---
+x-labels: &default-labels
+  com.centurylinklabs.watchtower.enable: true
+  container.label.group: writing
+
+x-limits: &resource-limits
+  restart: always
+  networks:
+    frontend:
+
+name: codeserver
+services:
+  codeserver:
+    image: ghcr.io/linuxserver/code-server
+    container_name: codeserver
+    hostname: codeserver.${PRIVATE_DOMAIN}
+    platform: linux/amd64
+    <<: *resource-limits
+    environment:
+      PUID: 1026
+      PGID: 100
+      TZ: ${TIME_ZONE?:TIME_ZONE is missing in Bitwarden}
+      PASSWORD: ${PASSWORD_CODESERVER?:PASSWORD_CODESERVER is missing in Bitwarden}
+      SUDO_PASSWORD: ${PASSWORD_CODESERVER?:SUDO_PASSWORD is missing in Bitwarden}
+      PROXY_DOMAIN: codeserver.${PRIVATE_DOMAIN}
+    volumes:
+      - type: bind
+        source: ${DOCKER_FOLDER_PATH?:Error - DOCKER_FOLDER_PATH is missing in Bitwarden}/codeserver
+        target: /config
+      - type: bind
+        source: /etc/timezone
+        target: /etc/timezone
+        read_only: true
+    labels:
+      <<: *default-labels
+      monitoring: dashboard
+      traefik.enable: true
+      traefik.http.routers.codeserver.rule: Host(`codeserver.${PRIVATE_DOMAIN}`)
+      traefik.http.routers.codeserver.entrypoints: websecure
+      traefik.http.routers.codeserver.tls.certresolver: le
+      traefik.http.services.codeserver.loadbalancer.server.port: 8443
+
+networks:
+  frontend:
+    external: true

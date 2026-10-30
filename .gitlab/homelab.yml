@@ -1,0 +1,43 @@
+stages:
+  - deploy
+
+deploy:compose:
+  stage: deploy
+  image: debian:bookworm-slim
+  resource_group: compose-deploy
+  timeout: 45m
+  variables:
+    GIT_DEPTH: "0"
+    DEBIAN_FRONTEND: noninteractive
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      changes:
+        - src/docker/**/*.yml
+        - src/docker/**/*.yaml
+        - .gitlab-ci.yml
+  before_script:
+    - apt-get update
+    - apt-get install -y --no-install-recommends bash ca-certificates curl git openssh-client python3 sshpass tar unzip
+  script:
+    - export BWS_ACCESS_TOKEN=$BWS_ACCESS_TOKEN
+    - bash src/cli/bitwarden.sh
+    - bash src/cli/generate.sh
+    - export DOCKER_FOLDER_PATH="$(bash src/cli/bitwarden.sh get DOCKER_FOLDER_PATH)"
+    - bash src/cli/ssh.sh ssh_run bash src/cli/pull.sh
+    - bash src/cli/compose.sh upload
+    - bash src/cli/compose.sh list > compose-files.txt
+    - |
+      found=0
+      while IFS= read -r file; do
+        [ -n "$file" ] || continue
+        found=1
+        project="${file##*/}"
+        project="${project%.yml}"
+        project="${project%.yaml}"
+        echo "——— ${file} ———"
+        bash src/cli/ssh.sh ssh_run docker compose --env-file "$DOCKER_FOLDER_PATH/generated/bw" --project-name "$project" -f "$file" stop || echo "ℹ️  stop: ${project} was not running"
+        bash src/cli/ssh.sh ssh_run docker compose --env-file "$DOCKER_FOLDER_PATH/generated/bw" --project-name "$project" -f "$file" pull
+        bash src/cli/ssh.sh ssh_run docker compose --env-file "$DOCKER_FOLDER_PATH/generated/bw" --project-name "$project" -f "$file" up -d
+      done < compose-files.txt
+      [ "$found" = 1 ] || echo "ℹ️  No compose changes. Nothing to deploy."

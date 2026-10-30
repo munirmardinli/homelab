@@ -1,0 +1,54 @@
+---
+x-labels: &default-labels
+  com.centurylinklabs.watchtower.enable: true
+  container.label.group: writing
+
+x-limits: &resource-limits
+  restart: always
+  networks:
+    frontend:
+
+name: obsidian
+services:
+  obsidian:
+    image: ghcr.io/linuxserver/obsidian:latest
+    container_name: obsidian
+    hostname: obsidian.${PRIVATE_DOMAIN}
+    platform: linux/amd64
+    shm_size: "5gb"
+    <<: *resource-limits
+    security_opt:
+      - no-new-privileges:false
+      - seccomp:unconfined
+    healthcheck:
+      test: timeout 10s bash -c ':> /dev/tcp/127.0.0.1/3000' || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+    environment:
+      CUSTOM_USER: ${OBSIDIAN_USER?:Error - OBSIDIAN_USER is missing in Bitwarden}
+      PASSWORD: ${OBSIDIAN_PASSWORD?:Error - OBSIDIAN_PASSWORD is missing in Bitwarden}
+      PUID: 1026
+      PGID: 100
+      TZ: ${TIME_ZONE?:TIME_ZONE is missing in Bitwarden}
+    volumes:
+      - type: bind
+        source: ${DOCKER_FOLDER_PATH?:Error - DOCKER_FOLDER_PATH is missing in Bitwarden}/obsidian
+        target: /config
+      - type: bind
+        source: /etc/timezone
+        target: /etc/timezone
+        read_only: true
+    labels:
+      <<: *default-labels
+      writing: dashboard
+      traefik.enable: true
+      traefik.http.routers.obsidian.rule: Host(`obsidian.${PRIVATE_DOMAIN}`)
+      traefik.http.routers.obsidian.entrypoints: websecure
+      traefik.http.routers.obsidian.tls.certresolver: le
+      traefik.http.services.obsidian.loadbalancer.server.port: 3000
+
+networks:
+  frontend:
+    external: true

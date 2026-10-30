@@ -1,0 +1,43 @@
+---
+x-labels: &default-labels
+  com.centurylinklabs.watchtower.enable: true
+  container.label.group: management
+
+x-limits: &resource-limits
+  restart: always
+  networks:
+    frontend:
+
+services:
+  dashboard:
+    image: ghcr.io/munirmardinli/dashboard:latest
+    container_name: dashboard
+    hostname: dashboard.${PRIVATE_DOMAIN}
+    <<: *resource-limits
+    environment:
+      SESSION_SECRET: ${SESSION_SECRET?:SESSION_SECRET is missing in Bitwarden}
+      SHELLY_PASSWORD: "${SHELLY_PASSWORD?:SHELLY_PASSWORD is missing in Bitwarden}"
+      GEMINI_API_KEY: ${GEMINI_API_KEY?:GEMINI_API_KEY is missing in Bitwarden}
+      GEMINI_MODEL: ${GEMINI_MODEL?:GEMINI_MODEL is missing in Bitwarden}
+      SMTP_MAIL: ${EMAIL?:EMAIL is missing in Bitwarden}
+      SMTP_PASSWORD: ${EMAIL_PASSWORD?:EMAIL_PASSWORD is missing in Bitwarden}
+    volumes:
+      - type: bind
+        source: ${DOCKER_FOLDER_PATH?:Error - DOCKER_FOLDER_PATH is missing in Bitwarden}/dashboard
+        target: /app/assets
+      - type: bind
+        source: /etc/timezone
+        target: /etc/timezone
+        read_only: true
+    labels:
+      <<: *default-labels
+      monitoring: dashboard
+      traefik.enable: true
+      traefik.http.routers.dashboard.rule: Host(`dashboard.${PRIVATE_DOMAIN}`)
+      traefik.http.routers.dashboard.entrypoints: websecure
+      traefik.http.routers.dashboard.tls.certresolver: le
+      traefik.http.services.dashboard.loadbalancer.server.port: 4015
+
+networks:
+  frontend:
+    external: true

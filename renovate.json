@@ -1,0 +1,54 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "timezone": "Europe/Berlin",
+  "extends": [
+    "config:recommended"
+  ],
+  "dependencyDashboardLabels": [
+    "renovate"
+  ],
+  "labels": [
+    "update"
+  ],
+  "assignees": [
+    "@munirmardinli"
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": [
+      "before 9am on Monday"
+    ]
+  },
+  "packageRules": [
+    {
+      "groupName": "docs typescript",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchFileNames": [
+        "src/docs/**"
+      ],
+      "matchPackageNames": [
+        "typescript"
+      ],
+      "rangeStrategy": "pin",
+      "commitMessagePrefix": "chore(docs):"
+    },
+    {
+      "groupName": "compose",
+      "enabled": true,
+      "matchFileNames": [
+        "src/docker/**/*.yml"
+      ],
+      "matchPackageNames": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ],
+      "commitMessagePrefix": "chore(compose):"
+    }
+  ]
+}

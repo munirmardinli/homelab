@@ -1,0 +1,53 @@
+---
+x-labels: &default-labels
+  com.centurylinklabs.watchtower.enable: true
+  container.label.group: montoring
+
+x-limits: &resource-limits
+  restart: always
+  shm_size: "256m"
+  networks:
+    frontend:
+
+name: uptimekuma
+services:
+  uptimekuma:
+    image: louislam/uptime-kuma:2
+    container_name: uptimekuma
+    hostname: uptimekuma.${PRIVATE_DOMAIN}
+    platform: linux/amd64
+    <<: *resource-limits
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 5s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      TZ: UTC
+      UMASK: 0022
+    volumes:
+      - type: bind
+        source: ${DOCKER_FOLDER_PATH?:Error - DOCKER_FOLDER_PATH is missing in Bitwarden}/uptimekuma
+        target: /app/data
+      - type: bind
+        source: /etc/timezone
+        target: /etc/timezone
+        read_only: true
+    labels:
+      <<: *default-labels
+      monitoring: dashboard
+      traefik.enable: true
+      traefik.http.routers.uptimekuma.rule: Host(`uptimekuma.${PRIVATE_DOMAIN}`)
+      traefik.http.routers.uptimekuma.entrypoints: websecure
+      traefik.http.routers.uptimekuma.tls.certresolver: le
+      traefik.http.services.uptimekuma.loadbalancer.server.port: 3001
+
+networks:
+  frontend:
+    external: true

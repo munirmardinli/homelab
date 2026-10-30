@@ -1,0 +1,46 @@
+---
+x-labels: &default-labels
+  com.centurylinklabs.watchtower.enable: true
+  container.label.group: monitoring
+
+x-limits: &resource-limits
+  restart: always
+  networks:
+    frontend:
+
+name: watchtower
+services:
+  watchtower:
+    image: nickfedor/watchtower
+    container_name: watchtower
+    hostname: watchtower.${PRIVATE_DOMAIN}
+    platform: linux/amd64
+    <<: *resource-limits
+    environment:
+      WATCHTOWER_CLEANUP: true
+      WATCHTOWER_REMOVE_VOLUMES: true
+      WATCHTOWER_POLL_INTERVAL: 60
+      WATCHTOWER_INCLUDE_RESTARTING: true
+      WATCHTOWER_LABEL_ENABLE: true
+      WATCHTOWER_INCLUDE_STOPPED: true
+      WATCHTOWER_REVIVE_STOPPED: false
+      TZ: ${TIME_ZONE?:TIME_ZONE is missing in Bitwarden}
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+      - type: bind
+        source: ${DOCKER_FOLDER_PATH?:Error - DOCKER_FOLDER_PATH is missing in Bitwarden}/generated/docker.json
+        target: /config.json
+        read_only: true
+      - type: bind
+        source: /etc/timezone
+        target: /etc/timezone
+        read_only: true
+    labels:
+      <<: *default-labels
+
+networks:
+  frontend:
+    external: true

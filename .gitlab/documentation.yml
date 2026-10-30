@@ -1,0 +1,21 @@
+stages:
+  - deploy
+
+pages:
+  stage: deploy
+  image: node:22-alpine
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  environment:
+    name: preview
+  script:
+    - cd src/docs
+    - npm ci
+    - npm exec tsc
+    - node dist/main.js
+  artifacts:
+    paths:
+      - src/docs/public
+  pages:
+    publish: src/docs/public
+    path_prefix: docs

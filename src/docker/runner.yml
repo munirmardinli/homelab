@@ -1,0 +1,41 @@
+---
+x-labels: &default-labels
+  com.centurylinklabs.watchtower.enable: true
+  container.label.group: management
+
+x-limits: &resource-limits
+  restart: always
+  networks:
+    frontend:
+
+name: runner
+services:
+  runner:
+    image: docker.io/gitlab/gitlab-runner:alpine-v17.9.1
+    container_name: runner
+    hostname: runner.${PRIVATE_DOMAIN}
+    platform: linux/amd64
+    <<: *resource-limits
+    extra_hosts:
+      - "gitlab.${PRIVATE_DOMAIN}:${HOMELAB_IP_PREFIX}.${HOMELAB_PROXY_HOST}"
+    environment:
+      TZ: ${TIME_ZONE?:TIME_ZONE is missing in Bitwarden}
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+      - type: bind
+        source: ${DOCKER_FOLDER_PATH}/generated/runner.toml
+        target: /etc/gitlab-runner/config.toml
+      - type: bind
+        source: /etc/timezone
+        target: /etc/timezone
+        read_only: true
+    labels:
+      <<: *default-labels
+      management: dashboard
+
+networks:
+  frontend:
+    external: true

@@ -1,0 +1,29 @@
+version: 2
+updates:
+  - package-ecosystem: docker-compose
+    directory: /src/docker
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Europe/Berlin
+    labels:
+      - update
+    commit-message:
+      prefix: chore
+      include: scope
+
+  - package-ecosystem: npm
+    directory: /src/docs
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Europe/Berlin
+    allow:
+      - dependency-name: typescript
+    labels:
+      - update
+    commit-message:
+      prefix: chore
+      include: scope

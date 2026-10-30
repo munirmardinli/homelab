@@ -1,0 +1,105 @@
+---
+x-labels: &default-labels
+  com.centurylinklabs.watchtower.enable: true
+  container.label.group: management
+
+x-limits: &resource-limits
+  restart: always
+
+name: traefik
+services:
+  traefik:
+    image: traefik:v3.6
+    container_name: traefik
+    hostname: traefik.${PRIVATE_DOMAIN}
+    <<: *resource-limits
+    environment:
+      CF_DNS_API_TOKEN: ${CLOUDFLARE_API_TOKEN?:Error - CLOUDFLARE_API_TOKEN is missing in Bitwarden}
+      PRIVATE_DOMAIN: ${PRIVATE_DOMAIN?:Error - PRIVATE_DOMAIN is missing in Bitwarden}
+      EMAIL: ${EMAIL?:Error - EMAIL is missing in Bitwarden}
+      HOMELAB_IP_PREFIX: ${HOMELAB_IP_PREFIX?:Error - HOMELAB_IP_PREFIX is missing in Bitwarden}
+      PUID: 1026
+      PGID: 100
+      TZ: ${TIME_ZONE?:TIME_ZONE is missing in Bitwarden}
+    command:
+      - --log.level=INFO
+      - --accesslog=true
+      - --metrics.prometheus=true
+      - --metrics.prometheus.manualrouting=true
+      - --metrics.prometheus.addrouterslabels=true
+      - --api.dashboard=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=frontend
+      - --providers.file.directory=/etc/traefik/dynamic
+      - --providers.file.watch=true
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.web.http.encodedcharacters.allowencodedslash=true
+      - --entrypoints.web.http.encodedcharacters.allowencodedbackslash=true
+      - --entrypoints.web.http.encodedcharacters.allowencodednullcharacter=true
+      - --entrypoints.web.http.encodedcharacters.allowencodedsemicolon=true
+      - --entrypoints.web.http.encodedcharacters.allowencodedpercent=true
+      - --entrypoints.web.http.encodedcharacters.allowencodedquestionmark=true
+      - --entrypoints.web.http.encodedcharacters.allowencodedhash=true
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.websecure.http.middlewares=lan@file
+      - --entrypoints.websecure.http.encodedcharacters.allowencodedslash=true
+      - --entrypoints.websecure.http.encodedcharacters.allowencodedbackslash=true
+      - --entrypoints.websecure.http.encodedcharacters.allowencodednullcharacter=true
+      - --entrypoints.websecure.http.encodedcharacters.allowencodedsemicolon=true
+      - --entrypoints.websecure.http.encodedcharacters.allowencodedpercent=true
+      - --entrypoints.websecure.http.encodedcharacters.allowencodedquestionmark=true
+      - --entrypoints.websecure.http.encodedcharacters.allowencodedhash=true
+      - --entrypoints.ssh.address=:2222
+      - --certificatesresolvers.le.acme.email=${EMAIL}
+      - --certificatesresolvers.le.acme.storage=/data/acme.json
+      - --certificatesresolvers.le.acme.dnschallenge=true
+      - --certificatesresolvers.le.acme.dnschallenge.provider=cloudflare
+      - --certificatesresolvers.le.acme.dnschallenge.resolvers=1.1.1.1:53,1.0.0.1:53
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+      - type: bind
+        source: ${DOCKER_FOLDER_PATH?:Error - DOCKER_FOLDER_PATH is missing in Bitwarden}/generated/traefik.yml
+        target: /etc/traefik/dynamic/dynamic.yml
+        read_only: true
+      - type: bind
+        source: ${DOCKER_FOLDER_PATH?}/traefik
+        target: /data
+      - type: bind
+        source: /etc/timezone
+        target: /etc/timezone
+        read_only: true
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+      - target: 443
+        published: 443
+        protocol: tcp
+      - target: 2222
+        published: 2222
+        protocol: tcp
+    networks:
+      frontend:
+    labels:
+      <<: *default-labels
+      traefik.enable: true
+      traefik.http.routers.traefik.rule: Host(`traefik.${PRIVATE_DOMAIN}`)
+      traefik.http.routers.traefik.entrypoints: websecure
+      traefik.http.routers.traefik.tls.certresolver: le
+      traefik.http.routers.traefik.middlewares: dashboard-auth@file
+      traefik.http.routers.traefik.service: api@internal
+      traefik.http.routers.traefik-metrics.rule: Host(`traefik.${PRIVATE_DOMAIN}`) && PathPrefix(`/metrics`)
+      traefik.http.routers.traefik-metrics.entrypoints: websecure
+      traefik.http.routers.traefik-metrics.tls.certresolver: le
+      traefik.http.routers.traefik-metrics.middlewares: dashboard-auth@file
+      traefik.http.routers.traefik-metrics.service: prometheus@internal
+
+networks:
+  frontend:
+    external: true

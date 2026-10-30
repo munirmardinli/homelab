@@ -1,0 +1,52 @@
+---
+x-labels: &default-labels
+  com.centurylinklabs.watchtower.enable: true
+  container.label.group: management
+
+x-limits: &resource-limits
+  restart: always
+  networks:
+    frontend:
+
+name: dashy
+services:
+  dashy:
+    image: lissy93/dashy:latest
+    container_name: dashy
+    hostname: dashy.${PRIVATE_DOMAIN}
+    platform: linux/amd64
+    <<: *resource-limits
+    healthcheck:
+      test: ["CMD", "node", "/app/services/healthcheck.js"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    volumes:
+      - type: bind
+        source: ${DOCKER_FOLDER_PATH?:Error - DOCKER_FOLDER_PATH is missing in Bitwarden}/dashy
+        target: /app/user-data
+      - type: bind
+        source: ${DOCKER_FOLDER_PATH}/generated/dashy.yml
+        target: /app/user-data/conf.yml
+      - type: bind
+        source: ../icons
+        target: /app/user-data/item-icons
+      - type: bind
+        source: /etc/timezone
+        target: /etc/timezone
+        read_only: true
+    environment:
+      NODE_ENV: production
+    labels:
+      <<: *default-labels
+      monitoring: dashboard
+      traefik.enable: true
+      traefik.http.routers.dashy.rule: Host(`dashy.${PRIVATE_DOMAIN}`)
+      traefik.http.routers.dashy.entrypoints: websecure
+      traefik.http.routers.dashy.tls.certresolver: le
+      traefik.http.services.dashy.loadbalancer.server.port: 8080
+
+networks:
+  frontend:
+    external: true

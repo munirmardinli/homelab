@@ -1,0 +1,43 @@
+---
+x-labels: &default-labels
+  com.centurylinklabs.watchtower.enable: true
+  container.label.group: monitoring
+
+x-limits: &resource-limits
+  restart: unless-stopped
+  networks:
+    frontend:
+
+name: homeassistant
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    container_name: homeassistant
+    hostname: homeassistant.${PRIVATE_DOMAIN}
+    <<: *resource-limits
+    environment:
+      TZ: ${TIME_ZONE?:TIME_ZONE is missing in Bitwarden}
+    volumes:
+      - type: bind
+        source: ${DOCKER_FOLDER_PATH?:Error - DOCKER_FOLDER_PATH is missing in Bitwarden}/homeassistant
+        target: /config
+      - type: bind
+        source: ${DOCKER_FOLDER_PATH}/generated/http
+        target: /config/.storage/http
+      - type: bind
+        source: /etc/timezone
+        target: /etc/timezone
+        read_only: true
+    labels:
+      <<: *default-labels
+      monitoring: dashboard
+      traefik.enable: true
+      traefik.http.routers.homeassistant.rule: Host(`homeassistant.${PRIVATE_DOMAIN}`)
+      traefik.http.routers.homeassistant.entrypoints: websecure
+      traefik.http.routers.homeassistant.tls.certresolver: le
+      traefik.http.routers.homeassistant.middlewares: "lan@file"
+      traefik.http.services.homeassistant.loadbalancer.server.port: 8123
+
+networks:
+  frontend:
+    external: true

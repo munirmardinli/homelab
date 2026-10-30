@@ -1,0 +1,42 @@
+{
+  "name": "homelab",
+  "version": "1.0.0",
+  "description": "Documentation site for the Homelab Compose stacks.",
+  "license": "MIT",
+  "type": "module",
+  "homepage": "https://github.com/munirmardinli/homelab",
+  "readme": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/munirmardinli/homelab.git",
+    "directory": "src/docs"
+  },
+  "author": {
+    "name": "Munir Mardinli",
+    "url": "https://mardinli.dev"
+  },
+  "contributors": [
+    {
+      "name": "Munir Mardinli",
+      "url": "https://mardinli.dev"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/munirmardinli/homelab/issues"
+  },
+  "keywords": [
+    "homelab",
+    "documentation",
+    "compose"
+  ],
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "postbuild": "node dist/main.js"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2"
+  }
+}

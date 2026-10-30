@@ -1,0 +1,789 @@
+pageInfo:
+  title: Munir Lab
+appConfig:
+  layout: auto
+  iconSize: medium
+  language: de
+  auth:
+    users:
+      - user: ${DASHY_USER?:Error - DASHY_USER is missing in Bitwarden}
+        hash: ${DASHY_HASH?:Error - DASHY_HASH is missing in Bitwarden}
+        type: admin
+  theme: nord-frost
+sections:
+  - name: Uhrzeit
+    icon: widgets/clock.png
+    widgets:
+      - type: clock
+        options: null
+        timeZone: ${TIME_ZONE?:TIME_ZONE is missing in Bitwarden}
+        format: de-DE
+        hideDate: false
+        id: 61fc8565-4168-4e4f-adec-99ff917232cc
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 2
+      collapsed: false
+      hideForGuests: true
+  - name: Wetter
+    icon: widgets/weather.png
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 1
+      collapsed: false
+      hideForGuests: true
+    widgets:
+      - type: weather-forecast
+        options:
+          apiKey: ${WEATHER_API_KEY?:Error - WEATHER_API_KEY is missing in Bitwarden}
+          city: Gütersloh
+          units: metric
+          hideDetails: true
+        id: 191623ad-8831-4e57-a2b5-bd005fae9ba2
+  - name: Sozialmediens
+    icon: socialMedia/index.png
+    displayData:
+      sortBy: most-used
+      rows: 1
+      cols: 1
+      collapsed: true
+      hideForGuests: false
+    items:
+      - title: Instagram
+        description: Instagram
+        icon: socialMedia/instegram.png
+        url: https://www.instagram.com/munirmardinli.47/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 593cd79c-5e09-47ce-bddd-53267d1d8c8b
+      - title: Youtube
+        description: "YouTube ist eine Video-Sharing-Plattform, auf der Nutzer Videos hochladen, anschauen, teilen und kommentieren können. Sie bietet eine breite Vielfalt an Inhalten, von Unterhaltung bis Bildung, und ermöglicht es Nutzern, eigene Kanäle zu erstellen."
+        icon: socialMedia/youtube.png
+        url: https://www.youtube.com/@munir.mardinli
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 94f6fef8-73d3-409f-8046-7c2d775e9d06
+      - title: Twitch
+        icon: socialMedia/twitch.png
+        url: https://www.twitch.tv/munirmardinli
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 15c9276f-b961-405b-a837-b626db347fea
+      - title: Xing
+        icon: socialMedia/xing.png
+        url: https://www.xing.com/profile/Munir_Mardinli
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 8be91fef-ea19-4c40-98a9-584351f745f7
+      - title: X
+        icon: socialMedia/x.png
+        url: https://x.com/munirmardinli
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 712b618b-c68c-4f48-bd6f-c95a4d71e438
+      - title: LinkedIn
+        icon: socialMedia/linkedin.png
+        url: https://www.linkedin.com/in/munirmardinli/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 5d40fe41-fa7f-46cf-8e18-9206fabdc327
+      - title: Linktree
+        icon: socialMedia/linktree.png
+        url: https://linktr.ee/munirmardinli
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: d6dbce46-39d3-44f6-bfb5-3b184437eeba
+      - title: Buy Me a Coffee
+        icon: socialMedia/buyMeACoffee.png
+        url: https://buymeacoffee.com/munirmardinli
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 185341f4-5d44-4c0b-aa27-06a09e078a3e
+      - title: Postman
+        icon: socialMedia/postman.png
+        url: https://www.postman.com/munirmardinli
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: d28413aa-8fee-468d-bb7f-e577f68277d4
+      - title: Kaggle
+        icon: socialMedia/kaggle.png
+        url: https://www.kaggle.com/munirmardinli
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: c8934fab-88c1-4f8e-a6fc-b076aac5b4d6
+      - title: GitHub
+        icon: socialMedia/github.png
+        url: https://github.com/munirmardinli
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 2091142b-a49b-4b56-97e1-764c7d51799c
+      - title: GitLab
+        icon: socialMedia/gitlab.png
+        url: https://gitlab.com/munirmardinli
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 12936a6c-ef68-4a01-9aa0-cd7df1477be8
+      - title: Reddit
+        icon: socialMedia/reddit.png
+        url: https://www.reddit.com/user/munir_mardinli/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 8016424c-8302-41a7-acff-c7b53866c47e
+  - name: Homelab
+    icon: homelab/index.png
+    displayData:
+      sortBy: most-used
+      rows: 1
+      cols: 1
+      collapsed: true
+      hideForGuests: true
+    items:
+      - title: FritzBox
+        description: >-
+          Die FritzBox ist ein Router von AVM, der WLAN, Telefonie,
+          Smart-Home-Funktionen und mehr vereint. Sie wird häufig in privaten
+          Haushalten und kleinen Büros eingesetzt.
+        icon: homelab/fritzbox.png
+        url: https://router.${PRIVATE_DOMAIN}
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 0_696_fritzbox
+      - title: Dashboard
+        description: >-
+          Dashboard ist ein selbst Erstelltertool, mit dem ich alle meine Worte
+          dort speichern könnte
+        icon: homelab/dashboard.svg
+        url: https://dashboard.${PRIVATE_DOMAIN}
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 1_696_dashboard
+      - title: Synology NAS
+        icon: homelab/synology.png
+        url: https://nas.${PRIVATE_DOMAIN}
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 2_696_synologynas
+      - title: GitLab
+        icon: homelab/gitlab.png
+        url: https://gitlab.${PRIVATE_DOMAIN}
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 3_696_gitlab
+      - title: AdGuard Home
+        icon: homelab/adguardhome.png
+        url: https://adguard.${PRIVATE_DOMAIN}
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 4_696_adguardhome
+      - title: Artcraft
+        icon: homelab/artcraft.svg
+        url: https://artcraft.${PRIVATE_DOMAIN}
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 5_696_artcraft
+      - title: Codeserver
+        icon: homelab/vscode.png
+        url: https://codeserver.${PRIVATE_DOMAIN}
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 6_696_codeserver
+      - title: OpenwebUi
+        icon: homelab/openwebui.png
+        url: https://openwebui.${PRIVATE_DOMAIN}
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 7_696_openwebui
+      - title: Traefik Dashboard
+        icon: homelab/traefik.png
+        url: https://traefik.${PRIVATE_DOMAIN}
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 8_696_traefikdashboard
+  - name: Studium
+    icon: engineeringStudies/index.png
+    displayData:
+      sortBy: most-used
+      rows: 1
+      cols: 1
+      collapsed: true
+      hideForGuests: true
+    items:
+      - title: Geogebra
+        icon: engineeringStudies/geogebra.png
+        url: https://accounts.geogebra.org/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 0_747_geogebra
+      - title: Thalia
+        icon: engineeringStudies/thalia.png
+        url: https://www.thalia.de/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 4_500_thalia
+      - title: Knowunity
+        icon: engineeringStudies/knowunity.png
+        url: https://v.de
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 1_747_knowunity
+      - title: Radom
+        icon: engineeringStudies/classtools.png
+        url: https://www.classtools.net/random-name-picker/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 2_747_radom
+      - title: Arndt bruenner
+        icon: engineeringStudies/arndtBruenner.png
+        url: https://www.arndt-bruenner.de/mathe/mathekurse.htm
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 3_747_arndtbruenner
+      - title: Latex Zeichnen
+        icon: engineeringStudies/zeicheTV.png
+        url: https://www.zeichen.tv/sonderzeichen/mathematik/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 5_747_latexzeichnen
+      - title: Zotero
+        icon: engineeringStudies/zotero.png
+        url: https://www.zotero.org/user/login/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 7_747_zotero
+      - title: Data Camp
+        icon: engineeringStudies/datacamp.png
+        url: https://www.datacamp.com
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 8_747_datacamp
+      - title: Khan Academy
+        icon: engineeringStudies/khanacademy.png
+        url: https://de.khanacademy.org
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 9_747_khanacademy
+      - title: Falshted
+        icon: engineeringStudies/falstad.png
+        url: https://www.falstad.com/circuit/circuitjs.html
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 17_1608_falshted
+      - title: tinkercad
+        icon: engineeringStudies/tinkercad.png
+        url: https://www.tinkercad.com
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 15_616_tinkercad
+  - name: Hobby
+    icon: hobbies/index.png
+    displayData:
+      sortBy: most-used
+      rows: 1
+      cols: 1
+      collapsed: true
+      hideForGuests: true
+    items:
+      - title: Komoot
+        icon: hobbies/komoot.png
+        url: https://www.komoot.com/de-de/user/6075243000127
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 768702b1-d63c-4383-bca0-5a9262d7480c
+      - title: Netflix
+        icon: hobbies/netflix.png
+        url: https://www.netflix.com/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: afcd658f-8d7b-4fa0-ab09-19c481d77654
+      - title: NW
+        icon: hobbies/nw.png
+        url: https://www.nw.de/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: dd6133da-8376-44a2-a3f0-7abfb80872a8
+      - title: Chess
+        icon: hobbies/chess.png
+        url: https://www.chess.com/de
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: fa9f336a-dd26-4777-b25c-41513779aedf
+      - title: Steam
+        icon: hobbies/steam.png
+        url: https://steamcommunity.com/id/munirmardinli/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: e2289f2a-9b42-4900-bd2e-9383d5902cea
+      - title: Nebenan
+        icon: hobbies/nebenan.png
+        url: https://nebenan.de/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 119447d4-7d9d-42a8-ba63-d484c1b4f81b
+      - title: Spontacts
+        icon: hobbies/spontacts.png
+        url: https://community.spontacts.com/index
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 68fa3670-9d27-4983-84fe-6d3fd7c4fe75
+      - title: GeForce Now
+        icon: hobbies/geforceNow.png
+        url: https://play.geforcenow.com/mall/#/loginwall
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 78fa3670-9d27-4983-84fe-6d3fd7c4fe75
+  - name: Shopping
+    icon: shopping/index.png
+    displayData:
+      sortBy: most-used
+      rows: 1
+      cols: 1
+      collapsed: true
+      hideForGuests: true
+    items:
+      - title: Amazon
+        icon: shopping/amazon.png
+        url: https://www.amazon.de/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 204fd566-8443-4119-a01c-550f7b77ce1a
+      - title: Lieferando
+        icon: shopping/lieferando.png
+        url: https://www.lieferando.de/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 4e730421-8139-4f80-91cc-6fba54bdc6df
+      - title: Reparatur
+        icon: shopping/ifixit.png
+        url: https://de.ifixit.com
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 3043cbcd-fc02-466c-829b-1cdd11570072
+      - title: Wertgarantie
+        icon: shopping/wertgarantie.png
+        url: https://my.wertgarantie.com/de
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: a0233fe6-b11d-4035-ba21-6e7bc0ea6586
+      - title: Kleinanzeigen
+        icon: shopping/kleinanzeigen.svg
+        url: https://www.kleinanzeigen.de
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 0ae8caac-f6d8-488b-85c1-f2ca3eaf3982
+  - name: Job Application
+    icon: jobApplication/index.png
+    displayData:
+      sortBy: most-used
+      rows: 1
+      cols: 1
+      collapsed: true
+      hideForGuests: true
+    items:
+      - title: vmock
+        icon: jobApplication/vmock.png
+        url: https://www.vmock.com/site
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 42f37910-e418-4536-b391-7b45577fde1a
+      - title: Crystal Knows
+        icon: jobApplication/crystalknows.png
+        url: https://www.crystalknows.com/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 14bcb08e-d46f-4137-acdd-ac63b5855339
+      - title: AuthoredUp
+        icon: jobApplication/authoredup.png
+        url: https://authoredup.com/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 7b8b114c-276b-43da-8613-3483bb873b39
+      - title: Twwt Hunter
+        icon: jobApplication/tweethunter.png
+        url: https://tweethunter.io/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 88b1e09e-8a56-4bbc-bad6-44a1f3ae4411
+      - title: IHK
+        icon: jobApplication/ihk.png
+        url: https://www.ostwestfalen.ihk.de/ausbildung/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 61332016-d92d-4789-be5e-4835ad6f21f5
+      - title: Ausbildungschance OWL
+        icon: jobApplication/ausbildungschance-owl.png
+        url: https://www.ausbildungschance-owl.de/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 390f38ba-938b-4daa-a458-18cd51e05762
+      - title: AUBI-Plus
+        icon: jobApplication/aubiplus.png
+        url: https://www.aubi-plus.de/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 851ea101-d672-439d-b49b-19716fed1096
+      - title: Jobs GT
+        icon: jobApplication/jobsgt.png
+        url: https://www.jobs-gütersloh.de/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: dafd0b77-e2f8-4793-847f-6c06493a40dd
+      - title: Resume Worded
+        icon: jobApplication/resumeworded.png
+        url: https://resumeworded.com/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 47c3deb5-df8e-4ec4-a56d-3457fbd7b7d9
+  - name: Gemischt
+    icon: mixed/index.png
+    displayData:
+      sortBy: most-used
+      rows: 1
+      cols: 1
+      collapsed: true
+      hideForGuests: true
+    items:
+      - title: AOK
+        icon: mixed/aok.png
+        url: https://aok.de/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 71f00586-4a80-49f0-a121-4d8b95631e73
+      - title: Videoconverter
+        icon: mixed/onlinevideoconverter.png
+        url: https://de.onlinevideoconverter.pro/472RM/youtube-converter-mp3
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 186ce603-f541-4d32-9c98-dcba2116c1e9
+      - title: BUND-ID
+        icon: mixed/bundID.png
+        url: https://id.bund.de/de/web/login/1/eID
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 7ae273a5-cadf-4db5-88a5-1450803ab187
+      - title: Virus Total
+        icon: mixed/virustotal.svg
+        url: https://www.virustotal.com/gui/home/upload
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 1a0ca579-7d56-4d9b-a3f2-83442464bc04
+      - title: Notube
+        icon: mixed/notube.png
+        url: https://notube.cc/de/youtube-app-v20
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 5452d214-ba2d-42c5-95d4-5791d167c43e
+  - name: PowerPoint Tools
+    icon: pptTools/index.png
+    displayData:
+      sortBy: most-used
+      rows: 1
+      cols: 1
+      collapsed: true
+      hideForGuests: true
+    items:
+      - title: Piktochart
+        icon: pptTools/piktochart.png
+        url: https://create.piktochart.com/users/sign_in
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 4a5f691c-d6a7-4e5a-a1aa-d3af710b67d6
+      - title: Xmind
+        icon: pptTools/xmind.png
+        url: https://www.xmind.net/embed/az9c/#
+        target: newtab
+        statusCheckAllowInsecure: true
+        statusCheck: true
+        id: 1efd3c1e-ef1e-46ee-bc48-2416a33f0c6f
+      - title: Remove
+        icon: pptTools/removeBG.png
+        url: https://www.remove.bg/de
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 0fe4d8bf-38a8-436d-a0a2-2d50c3ac3010
+      - title: pixabay
+        icon: pptTools/pixabay.png
+        url: https://pixabay.com/de/
+        target: newtab
+        statusCheckAllowInsecure: true
+        statusCheck: true
+        id: cbc190e5-0a81-44c9-839c-c84bae5270a8
+      - title: Prezi
+        icon: pptTools/prezi.png
+        url: https://prezi.com/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 61fdcb29-9042-4426-b4ff-1ed166a60d95
+      - title: Sildescarnival
+        icon: pptTools/slidescarnival.png
+        url: https://www.slidescarnival.com
+        target: newtab
+        statusCheckAllowInsecure: true
+        statusCheck: true
+        id: 2ebb8e37-e218-4dfc-9ad7-8f491940c347
+      - title: Photopea
+        icon: pptTools/photopea.png
+        url: https://www.photopea.com
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 5d7b4e50-ba20-4d68-b6e4-86d7b03f27f5
+      - title: Tineye
+        icon: pptTools/tineye.png
+        url: https://tineye.com
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 8cfe272c-1745-48ae-a4bd-7fcd65303e66
+      - title: Canva
+        icon: pptTools/canva.png
+        url: https://www.canva.com/de_de/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 8b2d199c-9565-418a-b187-d6a6bf452030
+      - title: Lottie
+        icon: pptTools/lottie.png
+        url: https://lottiefiles.com
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 457622a4-ecde-4615-9da6-9381b82b3662
+  - name: Recherche
+    icon: research/index.png
+    displayData:
+      sortBy: most-used
+      rows: 1
+      cols: 1
+      collapsed: true
+      hideForGuests: true
+    items:
+      - title: PDFDrive
+        icon: research/pdfdrive.png
+        url: https://www.pdfdrive.com
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 32daad20-073f-4a6c-a1dd-4c030a3ebebe
+      - title: Springer
+        icon: research/springer.png
+        url: https://link.springer.com
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 54ffa775-e3a5-412e-931d-79b6e049c164
+      - title: Refseek
+        icon: research/refseek.png
+        url: https://www.refseek.com
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 2bacbce5-8f8e-4a36-9496-92ae38ae9539
+      - title: Worldcat
+        icon: research/worldcat.png
+        url: https://www.worldcat.org
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: c677ad76-618a-4048-b4a4-c2759eab6523
+      - title: Citationmachine
+        icon: research/citationmachine.png
+        url: https://www.citationmachine.net
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 64f32a08-2b12-4ad1-9734-57d3bca987cb
+      - title: Lekturehilfe
+        icon: research/lekturehilfe.png
+        url: https://lektuerehilfe.de
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 8f8108d3-d2cd-4eac-853d-bff2c1c61b4d
+      - title: Heinrich-Heine-Universität Düsseldorf
+        icon: research/hhu.png
+        url: https://katalog.ulb.hhu.de
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 8724e507-4bbb-4268-bb00-3c3ea86653b6
+      - title: Perplexity AI
+        icon: research/perplexity.png
+        url: https://www.perplexity.ai
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 94aa1891-8834-4b2c-ae8f-4d75715fd995
+      - title: Notebook LM
+        icon: research/notebooklm.png
+        url: https://notebook.google.com/trynow
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 4e35089b-8fb8-437f-bda5-b8f5b7738e05
+  - name: Sprache
+    icon: language/index.png
+    displayData:
+      sortBy: most-used
+      rows: 1
+      cols: 1
+      collapsed: true
+      hideForGuests: true
+    items:
+      - title: PONS
+        icon: language/pons.png
+        url: https://de.pons.com
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: a7d07c3c-ec83-474b-89cf-cee770e84035
+      - title: languagetool
+        icon: language/languagetool.png
+        url: https://languagetool.org/de?utm_source=google&utm_medium=cpc&utm_campaign=GA_LT_DE_de_Sales_KW_Generic_3Upgrade&utm_content=rechtschreibung&utm_term=rechtschreibung&gclid=EAIaIQobChMI98S6_Z2D_gIVDs13Ch0N8wFpEAAYASAAEgJPtPD_BwE
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 90adcdd3-81a2-444e-a452-1b15e76a8a99
+      - title: Duden
+        icon: language/duden.png
+        url: https://www.duden.de/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: c88c7956-4692-4409-9583-627aafa47981
+      - title: Arabdict
+        icon: language/arabdict.png
+        url: https://www.arabdict.com/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: c0f49931-9a35-4549-b0a2-101132f131b8
+      - title: Aphorismen
+        icon: language/aphorismen.png
+        url: https://www.aphorismen.de/zitat/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 821b8fb9-9549-4bb2-b390-53f823325cf6
+      - title: Kunstworte
+        icon: language/kunstworte.png
+        url: https://www.kunst-worte.de/archaismen/seite-2/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: dbae45c6-c612-4f03-9c01-590f977df66e
+      - title: aberwitzig
+        icon: language/aberwitzig.png
+        url: https://www.aberwitzig.com/witze-zum-totlachen-2.php
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 1808a79c-e878-4a79-8c39-f2412bcb5cef
+      - title: Archaismen
+        icon: language/archaismen.png
+        url: https://ewnor.de/lexikon/lex-k.php
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 9b0a602b-91a7-40e0-a200-4530d3575dd9
+      - title: Bab.La
+        icon: language/babla.png
+        url: https://de.bab.la
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: b3be235f-b9b0-4899-9e1c-9fccc85d2fc3
+  - name: HEP
+    icon: hep/index.png
+    displayData:
+      sortBy: most-used
+      rows: 1
+      cols: 1
+      collapsed: true
+      hideForGuests: true
+    items:
+      - title: Taskcards
+        icon: hep/taskcards.png
+        url: https://bielefeld.taskcards.app/#/board/8e462962-74fb-47bd-a07c-be63d351daf0/view
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 51934c3c-f897-4534-b9ee-51415a0e4b00
+      - title: Webuntis
+        icon: hep/webuntis.png
+        url: https://ms-bk.webuntis.com/WebUntis/?school=ms-bk#/basic/login
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 1cea4ee7-642f-4d02-9c5d-112addc4927b
+      - title: Gesetze im Internet
+        icon: hep/gesetzeiminternet.png
+        url: https://www.gesetze-im-internet.de/gg/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 3dc992ce-4cb4-4fc3-8e63-44884166ae98

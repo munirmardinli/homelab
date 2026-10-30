@@ -1,0 +1,4 @@
+.env.production
+data/*
+.DS_Store
+.vscode/

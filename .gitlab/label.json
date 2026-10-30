@@ -1,0 +1,26 @@
+[
+  {
+    "name": "documentation",
+    "color": "#36454f"
+  },
+  {
+    "name": "compose",
+    "color": "#36454f"
+  },
+  {
+    "name": "config",
+    "color": "#36454f"
+  },
+  {
+    "name": "ci",
+    "color": "#36454f"
+  },
+  {
+    "name": "renovate",
+    "color": "#36454f"
+  },
+  {
+    "name": "update",
+    "color": "#36454f"
+  }
+]

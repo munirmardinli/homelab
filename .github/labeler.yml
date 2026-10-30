@@ -1,0 +1,29 @@
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/docs/**
+
+compose:
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/docker/**
+
+config:
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/.config/**
+          - src/cli/**
+          - src/icons/**
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/**
+          - .gitlab/**
+          - .gitlab-ci.yml
+
+renovate:
+  - changed-files:
+      - any-glob-to-any-file:
+          - renovate.json
+          - src/docker/renovate.yml

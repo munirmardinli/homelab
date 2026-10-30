@@ -1,0 +1,25 @@
+language: de-DE
+useGitignore: true
+rules:
+  WHITESPACE_RULE: false
+  UNPAIRED_BRACKETS: false
+  DE_CASE: false
+  LEERZEICHEN_HINTER_DOPPELPUNKT: false
+ignore:
+  html: true
+  style: true
+  frontmatter: true
+  markdownLinks: true
+ignorePaths:
+  - "src/**/*.{yml,yaml,json,md,toml}"
+  - ".vscode/**/*.json"
+  - ".prettierrc.yaml"
+  - ".config/**/*.{yml,json,.zshrc,zsh}"
+  - ".github/**/*.{yml,json}"
+  - "data/**/*.{yml,yaml,json,md,toml}"
+  - "README.md"
+english: []
+names: []
+abbreviations: []
+technicalTerms: []
+words: []

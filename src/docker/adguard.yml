@@ -1,0 +1,58 @@
+---
+x-labels: &default-labels
+  com.centurylinklabs.watchtower.enable: true
+  container.label.group: dns
+
+x-limits: &resource-limits
+  restart: unless-stopped
+  networks:
+    frontend:
+
+name: adguard
+services:
+  adguard:
+    image: adguard/adguardhome:latest
+    container_name: adguard
+    hostname: adguard.${PRIVATE_DOMAIN}
+    platform: linux/amd64
+    <<: *resource-limits
+    ports:
+      - target: 53
+        published: 53
+        protocol: tcp
+      - target: 53
+        published: 53
+        protocol: udp
+      - target: 784
+        published: 784
+        protocol: udp
+      - target: 853
+        published: 853
+        protocol: tcp
+    environment:
+      PUID: 1026
+      PGID: 100
+      TZ: ${TIME_ZONE?:TIME_ZONE is missing in Bitwarden}
+    volumes:
+      - type: bind
+        source: ${DOCKER_FOLDER_PATH?:Error - DOCKER_FOLDER_PATH is missing in Bitwarden}/adguard/config
+        target: /opt/adguardhome/conf
+      - type: bind
+        source: ${DOCKER_FOLDER_PATH}/adguard/data
+        target: /opt/adguardhome/work
+      - type: bind
+        source: /etc/timezone
+        target: /etc/timezone
+        read_only: true
+    labels:
+      <<: *default-labels
+      monitoring: dashboard
+      traefik.enable: true
+      traefik.http.routers.adguard.rule: Host(`adguard.${PRIVATE_DOMAIN}`)
+      traefik.http.routers.adguard.entrypoints: websecure
+      traefik.http.routers.adguard.tls.certresolver: le
+      traefik.http.services.adguard.loadbalancer.server.port: 80
+
+networks:
+  frontend:
+    external: true

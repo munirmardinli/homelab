@@ -1,0 +1,45 @@
+---
+x-labels: &default-labels
+  com.centurylinklabs.watchtower.enable: true
+  container.label.group: homelab
+
+x-limits: &resource-limits
+  restart: always
+  networks:
+    frontend:
+
+services:
+  renovate:
+    image: ghcr.io/mend/renovate-ce:15.10.0
+    container_name: renovate
+    hostname: renovate.${PRIVATE_DOMAIN}
+    platform: linux/amd64
+    <<: *resource-limits
+    extra_hosts:
+      - "gitlab.${PRIVATE_DOMAIN}:${HOMELAB_IP_PREFIX}.${HOMELAB_PROXY_HOST}"
+    environment:
+      LOG_LEVEL: debug
+      MEND_RNV_PLATFORM: gitlab
+      MEND_RNV_ACCEPT_TOS: y
+      MEND_RNV_LICENSE_KEY: ${MEND_RNV_LICENSE_KEY?:MEND_RNV_LICENSE_KEY is missing in Bitwarden}
+      MEND_RNV_ENDPOINT: https://gitlab.${PRIVATE_DOMAIN}/api/v4/
+      MEND_RNV_GITLAB_PAT: ${MEND_RNV_GITLAB_PAT?:MEND_RNV_GITLAB_PAT is missing in Bitwarden}
+      MEND_RNV_WEBHOOK_SECRET: renovate
+      RENOVATE_BINARY_SOURCE: install
+    volumes:
+      - type: bind
+        source: /etc/timezone
+        target: /etc/timezone
+        read_only: true
+    labels:
+      <<: *default-labels
+      monitoring: dashboard
+      traefik.enable: true
+      traefik.http.routers.renovate.rule: Host(`renovate.${PRIVATE_DOMAIN}`)
+      traefik.http.routers.renovate.entrypoints: websecure
+      traefik.http.routers.renovate.tls.certresolver: le
+      traefik.http.services.renovate.loadbalancer.server.port: 8080
+
+networks:
+  frontend:
+    external: true

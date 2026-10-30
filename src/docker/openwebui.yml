@@ -1,0 +1,41 @@
+---
+x-labels: &default-labels
+  com.centurylinklabs.watchtower.enable: true
+  container.label.group: webui
+
+x-limits: &resource-limits
+  restart: always
+  networks:
+    frontend:
+
+name: openwebui
+services:
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    hostname: openwebui.${PRIVATE_DOMAIN}
+    platform: linux/amd64
+    <<: *resource-limits
+    environment:
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+      WEBUI_SECRET_KEY: ${WEBUI_SECRET_KEY?:Error - WEBUI_SECRET_KEY is missing in Bitwarden}
+    volumes:
+      - type: bind
+        source: ${DOCKER_FOLDER_PATH?:Error - DOCKER_FOLDER_PATH is missing in Bitwarden}/openwebui
+        target: /app/backend/data
+      - type: bind
+        source: /etc/timezone
+        target: /etc/timezone
+        read_only: true
+    labels:
+      <<: *default-labels
+      monitoring: dashboard
+      traefik.enable: true
+      traefik.http.routers.openwebui.rule: Host(`openwebui.${PRIVATE_DOMAIN}`)
+      traefik.http.routers.openwebui.entrypoints: websecure
+      traefik.http.routers.openwebui.tls.certresolver: le
+      traefik.http.services.openwebui.loadbalancer.server.port: 8080
+
+networks:
+  frontend:
+    external: true
