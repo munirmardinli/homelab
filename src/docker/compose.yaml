@@ -1,0 +1,15 @@
+include:
+  - adguard.yml
+  - artcraft.yml
+  - codeserver.yml
+  - dashboard.yml
+  - dashy.yml
+  - gitlab.yml
+  - homeassistant.yml
+  - obsidian.yml
+  - openwebui.yml
+  - renovate.yml
+  - runner.yml
+  - traefik.yml
+  - uptime.yml
+  - watchtower.yml
