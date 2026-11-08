@@ -3,6 +3,8 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=src/cli/log.sh
+source "$REPO_ROOT/src/cli/log.sh"
 
 run_pull() {
     local local_changes=0
@@ -50,13 +52,13 @@ case "${1:-run}" in
         run_pull
         ;;
     --install-schedule)
-        exec /bin/bash "$REPO_ROOT/src/cli/extension/pullSchedule.sh" install
+        exec /bin/bash "$REPO_ROOT/src/settings/pullSchedule.sh" install
         ;;
     --remove-schedule)
-        exec /bin/bash "$REPO_ROOT/src/cli/extension/pullSchedule.sh" remove
+        exec /bin/bash "$REPO_ROOT/src/settings/pullSchedule.sh" remove
         ;;
     --status-schedule)
-        exec /bin/bash "$REPO_ROOT/src/cli/extension/pullSchedule.sh" status
+        exec /bin/bash "$REPO_ROOT/src/settings/pullSchedule.sh" status
         ;;
     --run)
         run_pull

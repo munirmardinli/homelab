@@ -1,0 +1,100 @@
+_config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+_paths_helper="$_config_home/homelab/paths.sh"
+
+if [[ -r "$_paths_helper" ]]; then
+  _setup_root="$(bash "$_paths_helper" root)" || _setup_root=""
+else
+  _setup_root=""
+fi
+
+if [[ -n "$_setup_root" ]]; then
+  export SETUP_ROOT="$_setup_root"
+  if [[ -r "$SETUP_ROOT/.env.production" ]]; then
+    source "$SETUP_ROOT/.env.production"
+    [[ -n "${BWS_ACCESS_TOKEN:-}" ]] && export BWS_ACCESS_TOKEN
+  fi
+else
+  print -u2 "zsh: SETUP_ROOT could not be resolved from $_config_home/homelab/paths.json"
+fi
+
+export PATH="$HOME/.antigravity-ide/antigravity-ide/bin:$PATH"
+export ZSH="${ZSH:-$HOME/.oh-my-zsh}"
+export POWERLEVEL9K_CONFIG_FILE="$_config_home/.p10k.zsh"
+
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+setopt APPEND_HISTORY SHARE_HISTORY HIST_IGNORE_ALL_DUPS HIST_REDUCE_BLANKS
+
+alias ll="ls -lahG"
+alias c="clear"
+alias reload="source ~/.zshrc"
+alias ni="npm install"
+alias nci="npm ci"
+alias nrd="npm run dev"
+alias co="code ."
+alias setup='make -C "$SETUP_ROOT" help'
+alias logs='less "$SETUP_ROOT/assets/logs/cli/$(date +%Y-%m-%d).log"'
+
+if [[ -f "$ZSH/oh-my-zsh.sh" ]]; then
+  ZSH_THEME="powerlevel10k"
+  plugins=(git node npm docker vscode)
+  source "$ZSH/oh-my-zsh.sh"
+fi
+
+if command -v brew >/dev/null; then
+  _brew_share="$(brew --prefix)/share"
+  [[ -f "$_brew_share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && \
+    source "$_brew_share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  if [[ -f "$_brew_share/zsh-history-substring-search/zsh-history-substring-search.zsh" ]]; then
+    source "$_brew_share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+    bindkey '^[[A' history-substring-search-up
+    bindkey '^[[B' history-substring-search-down
+  fi
+  [[ -f "$_brew_share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] && \
+    source "$_brew_share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  if [[ -f "$_brew_share/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
+    source "$_brew_share/powerlevel10k/powerlevel10k.zsh-theme"
+  fi
+  unset _brew_share
+fi
+
+if [[ -r "$_config_home/.p10k.zsh" ]]; then
+  source "$_config_home/.p10k.zsh"
+fi
+
+if [[ -d "$HOME/.docker/completions" ]]; then
+  fpath=("$HOME/.docker/completions" $fpath)
+fi
+autoload -Uz compinit
+compinit
+
+ohMyZshSetup() {
+  if [[ -f "$ZSH/oh-my-zsh.sh" ]]; then
+    echo "✅ Oh My Zsh is already installed."
+    return 0
+  fi
+  if ! command -v curl >/dev/null; then
+    echo "❌ curl is required to install Oh My Zsh." >&2
+    return 1
+  fi
+  local answer
+  echo "The official Oh My Zsh installer will be downloaded from GitHub."
+  printf 'Install Oh My Zsh now? [y/N] '
+  read -r answer
+  [[ "$answer" == [yY] || "$answer" == [yY][eE][sS] ]] || {
+    echo "Cancelled."
+    return 1
+  }
+  RUNZSH=no CHSH=no KEEP_ZSHRC=yes \
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+}
+
+zshInstall() {
+  ohMyZshSetup
+}
+
+unset _config_home _paths_helper _setup_root

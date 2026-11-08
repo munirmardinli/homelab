@@ -129,6 +129,10 @@ ssh_main() {
       shift
       ssh_run "$@"
       ;;
+    compose)
+      shift
+      exec bash "$CLI_DIR/compose.sh" "$@"
+      ;;
     "")
       ssh_run "echo logged-in && ls -la"
       ;;

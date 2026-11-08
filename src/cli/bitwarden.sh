@@ -16,8 +16,6 @@ if [[ ! -f "$BW_FILE" ]]; then
   mkdir -p "$(dirname "$BW_FILE")"
   if [[ -f "$ROOT/data/bw" ]]; then
     mv "$ROOT/data/bw" "$BW_FILE"
-  elif [[ -f "$ROOT/assets/bw" ]]; then
-    mv "$ROOT/assets/bw" "$BW_FILE"
   fi
 fi
 BWS_PROJECT="${BWS_PROJECT:-HomeLab}"

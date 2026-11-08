@@ -1,10 +1,8 @@
 .env.production
 data/*
+assets/
 .DS_Store
 .vscode/
-!.vscode/
-.vscode/*
-!.vscode/extensions.json
 !data/dashboard
 data/dashboard/db/backup
 data/dashboard/logs/*

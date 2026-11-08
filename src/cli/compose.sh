@@ -126,7 +126,7 @@ compose_upload() {
   [[ -d "$ROOT/.config" ]] && payload+=(.config)
   [[ -f "$BW_FILE" ]] && payload+=("${BW_FILE#"$ROOT"/}")
 
-  COPYFILE_DISABLE=1 tar -C "$ROOT" --exclude "src/.config/bw.yml" -cf - "${payload[@]}" | ssh_run "tar -C $(printf %q "$DEPLOY_DIR") -xf - && chmod 700 $(printf %q "$folder") && chmod 600 $(printf %q "$remote_bw")"
+  COPYFILE_DISABLE=1 tar -C "$ROOT" -cf - "${payload[@]}" | ssh_run "tar -C $(printf %q "$DEPLOY_DIR") -xf - && chmod 700 $(printf %q "$folder") && chmod 600 $(printf %q "$remote_bw")"
 }
 
 compose_project() {

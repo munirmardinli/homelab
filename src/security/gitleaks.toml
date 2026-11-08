@@ -1,0 +1,23 @@
+title = "homelab"
+
+[allowlist]
+description = "Vendor, build output, placeholders"
+paths = [
+  '''(^|/)node_modules/''',
+  '''(^|/)\.obsidian/''',
+  '''(^|/)\.next/''',
+  '''(^|/)\.storage/''',
+  '''(^|/)\.cache/''',
+  '''(^|/)dist/''',
+  '''(^|/)build/''',
+  '''(^|/)out/''',
+  '''(^|/)vendor/''',
+  '''(^|/)coverage/''',
+  '''(^|/)standalone/''',
+  '''data/generated/''',
+  '''\.env\.example$''',
+]
+regexes = [
+  '''Error - .* is missing in Bitwarden''',
+  '''Error - .* is missing in \.env''',
+]
