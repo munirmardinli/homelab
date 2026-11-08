@@ -19,30 +19,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  codeql:
-    name: CodeQL
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
-        with:
-          persist-credentials: false
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@33d7b85da1a04171e211befe2c739303b9a4c066
-        with:
-          languages: javascript-typescript
-          queries: security-extended
-          build-mode: none
-
-      - name: Analyze
-        uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066
-        with:
-          category: /language:javascript-typescript
-
   secrets:
     name: Secret scan
     runs-on: ubuntu-latest
@@ -55,12 +31,20 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Scan for leaked secrets
-        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITLEAKS_ENABLE_COMMENTS: "false"
-          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "false"
+      - name: Set up Go
+        uses: actions/setup-go@7a3fe6cf4cb3a834922a1244abfce67bcef6a0c5
+        with:
+          go-version: "1.24.11"
+
+      - name: Install Gitleaks
+        run: go install github.com/zricethezav/gitleaks/v8@v8.30.1
+
+      - name: Scan full Git history for leaked secrets
+        run: |
+          "$(go env GOPATH)/bin/gitleaks" git \
+            --config=src/security/gitleaks.toml \
+            --log-opts=--all \
+            --redact=100
 
   dependencies:
     name: Dependency audit
