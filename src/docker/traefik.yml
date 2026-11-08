@@ -9,7 +9,7 @@ x-limits: &resource-limits
 name: traefik
 services:
   traefik:
-    image: traefik:v3.6
+    image: traefik:v3.7
     container_name: traefik
     hostname: traefik.${PRIVATE_DOMAIN}
     <<: *resource-limits
