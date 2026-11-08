@@ -38,7 +38,7 @@
       "groupName": "compose",
       "enabled": true,
       "matchFileNames": [
-        "src/docker/**/*.yml"
+        "src/docker/compose.yml"
       ],
       "matchPackageNames": [
         "*"

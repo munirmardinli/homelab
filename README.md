@@ -4,14 +4,14 @@ Docker Compose stacks for a homelab, deployed from GitLab CI. German and English
 
 ## Layout
 
-| Path | Purpose |
-| --- | --- |
-| `src/docker` | One Compose file per service. |
-| `src/.config` | Configuration rendered onto the host. |
-| `src/cli` | Secrets, generation, SSH, and Compose deploy. |
-| `src/docs` | Documentation site. Markdown lives in `src/docs/src/content`. |
-| `.gitlab/homelab.yml` | Deploy pipeline. |
-| `.gitlab/documentation.yml` | Pages pipeline. |
+| Path                        | Purpose                                                       |
+| --------------------------- | ------------------------------------------------------------- |
+| `src/docker`                | One Compose file per service.                                 |
+| `src/.config`               | Configuration rendered onto the host.                         |
+| `src/cli`                   | Secrets, generation, SSH, and Compose deploy.                 |
+| `src/docs`                  | Documentation site. Markdown lives in `src/docs/src/content`. |
+| `.gitlab/homelab.yml`       | Deploy pipeline.                                              |
+| `.gitlab/documentation.yml` | Pages pipeline.                                               |
 
 ## Documentation
 

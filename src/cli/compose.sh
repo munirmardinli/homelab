@@ -9,6 +9,13 @@ CLI_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=ssh.sh
 source "$CLI_DIR/ssh.sh"
 
+compose_ignored() {
+  case "${1##*/}" in
+    compose.yml|compose.yaml|docker-compose.yml|docker-compose.yaml) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
 collect_compose_files() {
   COMPOSE_FILES=()
   local f base name
@@ -16,6 +23,7 @@ collect_compose_files() {
   if [[ "${CI_PIPELINE_SOURCE:-}" == "web" && -z "${COMPOSE_STACKS:-}" ]]; then
     for f in "$ROOT"/src/docker/*.yml "$ROOT"/src/docker/*.yaml; do
       [[ -f "$f" ]] || continue
+      compose_ignored "$f" && continue
       COMPOSE_FILES+=("${f#"$ROOT"/}")
     done
     return 0
@@ -27,7 +35,10 @@ collect_compose_files() {
       name="${name##*/}"
       name="${name%.yml}"
       name="${name%.yaml}"
-      if [[ -f "$ROOT/src/docker/${name}.yml" ]]; then
+      if compose_ignored "${name}.yml"; then
+        echo "❌ Compose file is not a stack: ${name}" >&2
+        return 1
+      elif [[ -f "$ROOT/src/docker/${name}.yml" ]]; then
         COMPOSE_FILES+=("src/docker/${name}.yml")
       elif [[ -f "$ROOT/src/docker/${name}.yaml" ]]; then
         COMPOSE_FILES+=("src/docker/${name}.yaml")
@@ -45,6 +56,7 @@ collect_compose_files() {
     while IFS= read -r f; do
       [[ -n "$f" ]] || continue
       [[ -f "$ROOT/$f" ]] || continue
+      compose_ignored "$f" && continue
       COMPOSE_FILES+=("$f")
     done < <(git -C "$ROOT" diff --name-only --diff-filter=ACMR "$before" "$after" -- 'src/docker/*.yml' 'src/docker/*.yaml')
     return 0
@@ -55,6 +67,7 @@ collect_compose_files() {
       while IFS= read -r f; do
         [[ -n "$f" ]] || continue
         [[ -f "$ROOT/$f" ]] || continue
+        compose_ignored "$f" && continue
         COMPOSE_FILES+=("$f")
       done < <(git -C "$ROOT" diff --name-only --diff-filter=ACMR HEAD -- 'src/docker/*.yml' 'src/docker/*.yaml')
     fi
@@ -63,6 +76,7 @@ collect_compose_files() {
 
   for f in "$ROOT"/src/docker/*.yml "$ROOT"/src/docker/*.yaml; do
     [[ -f "$f" ]] || continue
+    compose_ignored "$f" && continue
     base="${f#"$ROOT"/}"
     COMPOSE_FILES+=("$base")
   done

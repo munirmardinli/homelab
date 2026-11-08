@@ -179,6 +179,7 @@ if devices_file.is_file() and dynamic_file.is_file() and domain:
         services.extend([
             f"    {name}:",
             "      loadBalancer:",
+            "        passHostHeader: false",
         ])
         if https:
             services.append("        serversTransport: insecure")

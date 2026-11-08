@@ -8,19 +8,25 @@ x-limits: &resource-limits
   networks:
     frontend:
 
+name: dashboard
 services:
-  dashboard:
-    image: ghcr.io/munirmardinli/dashboard:latest
-    container_name: dashboard
-    hostname: dashboard.${PRIVATE_DOMAIN}
+  api:
+    image: ghcr.io/munirmardinli/dashboard-api:latest
+    container_name: api
+    hostname: api.${PRIVATE_DOMAIN}
     <<: *resource-limits
-    environment:
-      SESSION_SECRET: ${SESSION_SECRET?:SESSION_SECRET is missing in Bitwarden}
-      SHELLY_PASSWORD: "${SHELLY_PASSWORD?:SHELLY_PASSWORD is missing in Bitwarden}"
-      GEMINI_API_KEY: ${GEMINI_API_KEY?:GEMINI_API_KEY is missing in Bitwarden}
-      GEMINI_MODEL: ${GEMINI_MODEL?:GEMINI_MODEL is missing in Bitwarden}
-      SMTP_MAIL: ${EMAIL?:EMAIL is missing in Bitwarden}
-      SMTP_PASSWORD: ${EMAIL_PASSWORD?:EMAIL_PASSWORD is missing in Bitwarden}
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:4000/health').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
     volumes:
       - type: bind
         source: ${DOCKER_FOLDER_PATH?:Error - DOCKER_FOLDER_PATH is missing in Bitwarden}/dashboard
@@ -29,6 +35,40 @@ services:
         source: /etc/timezone
         target: /etc/timezone
         read_only: true
+    environment:
+      SESSION_SECRET: ${SESSION_SECRET?:SESSION_SECRET is missing in Bitwarden}
+      SHELLY_PASSWORD: "${SHELLY_PASSWORD?:SHELLY_PASSWORD is missing in Bitwarden}"
+      GEMINI_API_KEY: ${GEMINI_API_KEY?:GEMINI_API_KEY is missing in Bitwarden}
+      GEMINI_MODEL: ${GEMINI_MODEL?:GEMINI_MODEL is missing in Bitwarden}
+      SMTP_MAIL: ${EMAIL?:EMAIL is missing in Bitwarden}
+      SMTP_PASSWORD: ${EMAIL_PASSWORD?:EMAIL_PASSWORD is missing in Bitwarden}
+    depends_on:
+      redis:
+        condition: service_healthy
+    labels:
+      <<: *default-labels
+      monitoring: dashboard
+      traefik.enable: true
+      traefik.http.routers.api.rule: Host(`api.${PRIVATE_DOMAIN}`)
+      traefik.http.routers.api.entrypoints: websecure
+      traefik.http.routers.api.tls.certresolver: le
+      traefik.http.services.api.loadbalancer.server.port: 4000
+  dashboard:
+    image: ghcr.io/munirmardinli/dashboard-ui:latest
+    container_name: dashboard
+    hostname: dashboard.${PRIVATE_DOMAIN}
+    <<: *resource-limits
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    environment:
+      NEXT_PUBLIC_API_URL: https://api.${PRIVATE_DOMAIN}
+    depends_on:
+      api:
+        condition: service_healthy
     labels:
       <<: *default-labels
       monitoring: dashboard
@@ -36,7 +76,22 @@ services:
       traefik.http.routers.dashboard.rule: Host(`dashboard.${PRIVATE_DOMAIN}`)
       traefik.http.routers.dashboard.entrypoints: websecure
       traefik.http.routers.dashboard.tls.certresolver: le
-      traefik.http.services.dashboard.loadbalancer.server.port: 4015
+      traefik.http.services.dashboard.loadbalancer.server.port: 80
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    hostname: redis.${PRIVATE_DOMAIN}
+    <<: *resource-limits
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    labels:
+      <<: *default-labels
 
 networks:
   frontend:

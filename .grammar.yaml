@@ -16,10 +16,104 @@ ignorePaths:
   - ".prettierrc.yaml"
   - ".config/**/*.{yml,json,.zshrc,zsh}"
   - ".github/**/*.{yml,json}"
-  - "data/**/*.{yml,yaml,json,md,toml}"
+  - "data/dashboard/docs/studies/hep/generally/1.1/presentation/slider.md"
   - "README.md"
-english: []
-names: []
-abbreviations: []
-technicalTerms: []
-words: []
+english:
+  - "on"
+  - top
+  - Top-up
+  - Health
+  - and
+  - Prevention
+  - About
+  - Movement
+  - Withitness
+  - Connect
+  - researchgate
+  - post-disaster
+  - Syria
+  - disability
+  - stigma
+  - reduction
+  - natural
+  - disaster
+  - Perplexity
+names:
+  - Verene
+  - Munir
+  - Munirs
+  - Constance
+  - Mardinli
+  - Grte
+  - Levke
+  - Händehyg
+  - bgw-themen
+  - Lamers
+  - Sanour
+  - Musenberg
+  - Mattioli
+  - Kehlbacher
+  - Tratter
+abbreviations:
+  - Pmo
+  - BiKo
+  - Start-MSBK
+  - HEP
+  - HEPs
+  - HEP-Ausbildung
+  - BAuA
+  - KRINKO
+  - UN-BRK
+  - MmB
+  - Alg
+  - ISL
+  - ff
+technicalTerms:
+  - Taskcards-Einführung
+  - Taskcards
+  - sexfixiert
+  - Empathieorientierung
+  - Personzentrierung
+  - Teilhabeorientierung
+  - Teilgabeanalyse
+  - Multiprofessionalität
+  - Rekonvaleszenzphase
+  - gággraina
+  - Hepatitisimpfungen
+  - Dysmelien
+  - Methodensheet
+  - Spastik
+  - reizempfindlichen
+  - virusinaktivierend
+  - ableistisch
+  - Lifter
+  - patreikulturelle
+  - vibratorisch
+  - Heilerziehungspflegerkräfte
+  - Mobilitätsarmut
+  - Brauensteifermodel
+  - Trikulturelle
+  - Hammurapi
+  - Hagiographie
+words:
+  - herz
+  - Heilerziehungspflge
+  - Notize
+  - Beziehung-
+  - Direktiv
+  - HEP-Fachkraft
+  - Wegfressende
+  - Gesetzliche
+  - potentiell
+  - Gebindes
+  - Anbruchdatum
+  - ortsbeweglichen
+  - personzentriertes
+  - Qualitätsangebot
+  - unparfümierte
+  - Unterlassene
+  - Bevormundungsrolle
+  - entsexualisiert
+  - rausgehen
+  - Biographische
+  - alleingestellt

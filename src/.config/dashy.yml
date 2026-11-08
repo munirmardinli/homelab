@@ -1,15 +1,256 @@
+---
 pageInfo:
   title: Munir Lab
+  color: "#0a0a0a"
 appConfig:
   layout: auto
   iconSize: medium
   language: de
+  theme: munir
+  cssThemes:
+    - munir
+  externalStyleSheet:
+    - https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap
+  customColors:
+    munir:
+      primary: "#f5f5f5"
+      background: "#0a0a0a"
+      background-darker: "#141414"
+      heading-text-color: "#ffffff"
+      item-text-color: "#e8e8e8"
+      item-group-outer-background: "#1c1c1c"
+      item-group-background: "#111111"
+      item-group-heading-text-color: "#ffffff"
+      item-group-heading-text-color-hover: "#ffffff"
+      nav-link-text-color: "#a3a3a3"
+      nav-link-background-color: "#1a1a1a"
+      nav-link-text-color-hover: "#0a0a0a"
+      nav-link-background-color-hover: "#ffffff"
+      nav-link-border-color: "#2a2a2a"
+      search-container-background: "#141414"
+      search-field-background: "#0a0a0a"
+      settings-background: "#141414"
+      settings-text-color: "#f5f5f5"
+      footer-text-color: "#737373"
+      context-menu-color: "#f5f5f5"
+      context-menu-background: "#141414"
+      context-menu-secondary-color: "#2a2a2a"
+      curve-factor: 16px
+      dimming-factor: 0.9
+      item-shadow: none
+      item-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.45)
+      item-icon-transform: grayscale(1) saturate(0)
+      item-icon-transform-hover: grayscale(0) saturate(1)
+      outline-color: "#ffffff"
+      scroll-bar-color: "#3a3a3a"
+      scroll-bar-background: "#0a0a0a"
+      neutral: "#262626"
+  customCss: >
+    html[data-theme='munir'],
+
+    html[data-theme='munir'] body {
+      font-family: "Geist", system-ui, sans-serif !important;
+    }
+
+    .page-titles .title,
+
+    h1.title,
+
+    .page-title {
+      font-family: "Playfair Display", Georgia, serif !important;
+      font-weight: 500 !important;
+      letter-spacing: -0.02em !important;
+    }
+
+    .section-header h3,
+
+    .item-title,
+
+    .collapsable .section-header {
+      font-family: "Playfair Display", Georgia, serif !important;
+    }
+
+    form.normal input,
+
+    form.normal label,
+
+    form.normal .search-wrap::after,
+
+    .footer,
+
+    code,
+
+    pre {
+      font-family: "Geist Mono", ui-monospace, monospace !important;
+    }
+
+    .section-icon img,
+
+    .section-icon svg,
+
+    .section-icon i {
+      filter: grayscale(1) saturate(0);
+      transition: filter 0.2s ease;
+    }
+
+    .section-header:hover .section-icon img,
+
+    .section-header:hover .section-icon svg,
+
+    .section-header:hover .section-icon i,
+
+    .section-header:focus-within .section-icon img,
+
+    .section-header:focus-within .section-icon svg,
+
+    .section-header:focus-within .section-icon i {
+      filter: grayscale(0) saturate(1);
+    }
+
+    .home {
+      position: relative !important;
+    }
+
+    section.settings-outer {
+      position: fixed !important;
+      top: 0.7rem !important;
+      right: 5vw !important;
+      left: auto !important;
+      z-index: 20;
+      display: flex !important;
+      align-items: center !important;
+      gap: 0.55rem !important;
+      width: auto !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      background: transparent !important;
+    }
+
+    section.settings-outer > *:not(form) {
+      position: static !important;
+      margin: 0 !important;
+    }
+
+    .item-group-container {
+      border-top: 1px solid #2a2a2a !important;
+      margin-top: 0.35rem !important;
+      padding-top: 0.85rem !important;
+    }
+
+    form.normal {
+      position: relative !important;
+      display: block !important;
+      flex: 0 0 15.5rem !important;
+      width: 15.5rem !important;
+      max-width: calc(100vw - 8rem) !important;
+      height: 2.35rem !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: visible !important;
+      background: transparent !important;
+      border-radius: 999px !important;
+    }
+
+    form.normal .search-wrap {
+      position: relative !important;
+      width: 100% !important;
+      height: 2.35rem !important;
+    }
+
+    form.normal .search-wrap::before {
+      content: "";
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      width: 0.95rem;
+      height: 0.95rem;
+      background: center / contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a3a3a3' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-3.5-3.5'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    form.normal .search-wrap::after {
+      content: "\2318 K";
+      position: absolute;
+      right: 0.4rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      padding: 0.22rem 0.4rem;
+      border: 1px solid #3a3a3a;
+      border-radius: 0.4rem;
+      background: #141414;
+      color: #e5e5e5;
+      font-size: 0.68rem;
+      letter-spacing: 0.03em;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    form.normal label {
+      position: absolute !important;
+      left: 2.05rem !important;
+      top: 50% !important;
+      transform: translateY(-50%);
+      z-index: 2;
+      margin: 0 !important;
+      color: #8a8a8a !important;
+      font-size: 0.85rem !important;
+      line-height: 1.2 !important;
+      white-space: nowrap !important;
+      pointer-events: none;
+    }
+
+    form.normal:focus-within label,
+
+    form.normal:has(input:not(:placeholder-shown)) label {
+      opacity: 0 !important;
+    }
+
+    form.normal input {
+      display: block !important;
+      box-sizing: border-box !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      height: 2.35rem !important;
+      margin: 0 !important;
+      padding: 0 3.6rem 0 2.15rem !important;
+      border: 1px solid #3f3f3f !important;
+      border-radius: 999px !important;
+      background: #0a0a0a !important;
+      color: #f5f5f5 !important;
+      font-size: 0.95rem !important;
+      line-height: 2.35rem !important;
+      opacity: 1 !important;
+    }
+
+    form.normal input::placeholder {
+      color: transparent !important;
+    }
+
+    form.normal input:focus {
+      border-color: #f5f5f5 !important;
+      outline: none !important;
+    }
+
+    form.normal p,
+
+    form.normal .web-search-note,
+
+    form.normal .clear-search {
+      display: none !important;
+      height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+    }
   auth:
     users:
       - user: ${DASHY_USER?:Error - DASHY_USER is missing in Bitwarden}
         hash: ${DASHY_HASH?:Error - DASHY_HASH is missing in Bitwarden}
         type: admin
-  theme: nord-frost
 sections:
   - name: Uhrzeit
     icon: widgets/clock.png
@@ -60,7 +301,10 @@ sections:
         statusCheckAllowInsecure: true
         id: 593cd79c-5e09-47ce-bddd-53267d1d8c8b
       - title: Youtube
-        description: "YouTube ist eine Video-Sharing-Plattform, auf der Nutzer Videos hochladen, anschauen, teilen und kommentieren können. Sie bietet eine breite Vielfalt an Inhalten, von Unterhaltung bis Bildung, und ermöglicht es Nutzern, eigene Kanäle zu erstellen."
+        description: YouTube ist eine Video-Sharing-Plattform, auf der Nutzer Videos
+          hochladen, anschauen, teilen und kommentieren können. Sie bietet eine
+          breite Vielfalt an Inhalten, von Unterhaltung bis Bildung, und
+          ermöglicht es Nutzern, eigene Kanäle zu erstellen.
         icon: socialMedia/youtube.png
         url: https://www.youtube.com/@munir.mardinli
         target: newtab
@@ -154,8 +398,7 @@ sections:
       hideForGuests: true
     items:
       - title: FritzBox
-        description: >-
-          Die FritzBox ist ein Router von AVM, der WLAN, Telefonie,
+        description: Die FritzBox ist ein Router von AVM, der WLAN, Telefonie,
           Smart-Home-Funktionen und mehr vereint. Sie wird häufig in privaten
           Haushalten und kleinen Büros eingesetzt.
         icon: homelab/fritzbox.png
@@ -165,9 +408,8 @@ sections:
         statusCheckAllowInsecure: true
         id: 0_696_fritzbox
       - title: Dashboard
-        description: >-
-          Dashboard ist ein selbst Erstelltertool, mit dem ich alle meine Worte
-          dort speichern könnte
+        description: Dashboard ist ein selbst Erstelltertool, mit dem ich alle meine
+          Worte dort speichern könnte
         icon: homelab/dashboard.svg
         url: https://dashboard.${PRIVATE_DOMAIN}
         target: newtab

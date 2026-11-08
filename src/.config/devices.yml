@@ -1,7 +1,7 @@
 - name: nas
   ip: ${HOMELAB_IP_PREFIX}.4
-  port: 5
-  https: true
+  port: 4
+  https: false
 - name: router
   ip: ${HOMELAB_IP_PREFIX}.1
   port: 80
