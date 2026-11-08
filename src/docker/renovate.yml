@@ -10,7 +10,7 @@ x-limits: &resource-limits
 
 services:
   renovate:
-    image: ghcr.io/mend/renovate-ce:15.10.0
+    image: ghcr.io/mend/renovate-ce:15.11.0
     container_name: renovate
     hostname: renovate.${PRIVATE_DOMAIN}
     platform: linux/amd64
