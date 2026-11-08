@@ -13,6 +13,11 @@
   "assignees": [
     "@munirmardinli"
   ],
+  "docker-compose": {
+    "managerFilePatterns": [
+      "/^src\\/docker\\/.*\\.ya?ml$/"
+    ]
+  },
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": [
@@ -37,8 +42,11 @@
     {
       "groupName": "compose",
       "enabled": true,
+      "matchManagers": [
+        "docker-compose"
+      ],
       "matchFileNames": [
-        "src/docker/compose.yml"
+        "src/docker/**"
       ],
       "matchPackageNames": [
         "*"
