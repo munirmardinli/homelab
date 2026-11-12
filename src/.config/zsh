@@ -2,22 +2,10 @@ _config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
-_paths_helper="$_config_home/homelab/paths.sh"
-
-if [[ -r "$_paths_helper" ]]; then
-  _setup_root="$(bash "$_paths_helper" root)" || _setup_root=""
-else
-  _setup_root=""
-fi
-
-if [[ -n "$_setup_root" ]]; then
-  export SETUP_ROOT="$_setup_root"
-  if [[ -r "$SETUP_ROOT/.env.production" ]]; then
-    source "$SETUP_ROOT/.env.production"
-    [[ -n "${BWS_ACCESS_TOKEN:-}" ]] && export BWS_ACCESS_TOKEN
-  fi
-else
-  print -u2 "zsh: SETUP_ROOT could not be resolved from $_config_home/homelab/paths.json"
+export SETUP_ROOT=__HOMELAB_ROOT__
+if [[ -r "$SETUP_ROOT/.env.production" ]]; then
+  source "$SETUP_ROOT/.env.production"
+  [[ -n "${BWS_ACCESS_TOKEN:-}" ]] && export BWS_ACCESS_TOKEN
 fi
 
 export PATH="$HOME/.antigravity-ide/antigravity-ide/bin:$PATH"
@@ -97,4 +85,4 @@ zshInstall() {
   ohMyZshSetup
 }
 
-unset _config_home _paths_helper _setup_root
+unset _config_home

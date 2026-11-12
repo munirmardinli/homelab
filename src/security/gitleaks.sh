@@ -13,7 +13,7 @@ gitleaks_scan() {
 
   : >"$GITLEAKS_TSV"
   scan_root="${IMAC_REPO_DIR:-$(env_val IMAC_REPO_DIR)}"
-  scan_root="${scan_root:-$HOMELAB_WORKSPACE}"
+  scan_root="${scan_root:-$ROOT_DIR}"
   scan_root="${scan_root/#\~/$HOME}"
 
   if ! command -v gitleaks >/dev/null; then

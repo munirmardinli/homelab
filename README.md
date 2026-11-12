@@ -29,11 +29,11 @@ A push to the default branch deploys changed Compose files and, when `src/docs` 
 
 ## Local Make commands
 
-Run `make` or `make help` at the repository root to list the available commands. `make check` validates shell syntax and the paths configuration; `make paths` prints the directories resolved from [`src/.config/bash/paths.json`](src/.config/bash/paths.json).
+Run `make` or `make help` at the repository root to list the available commands. `make check` validates shell and Zsh syntax.
 
-### Zsh and paths
+### Zsh
 
-`make zsh-install` syncs the single Zsh startup file from `src/.config/zsh` to `~/.zshrc`, the Powerlevel10k config to `~/.config/.p10k.zsh`, and the path resolver plus `paths.json` to `~/.config/homelab/`. The repository root is resolved from the `SETUP_ROOT` entry in `paths.json`; update that entry if you move the checkout. Restart Zsh after syncing. `make zsh-oh-my-zsh` optionally installs Oh My Zsh after confirmation.
+`make zsh` (or `make zsh-install`) updates only `~/.zshrc` from `src/.config/zsh` and inserts the absolute path of the current checkout as `SETUP_ROOT`. Run it again after moving the repository. Restart Zsh after syncing. `make zsh-oh-my-zsh` optionally installs Oh My Zsh after confirmation.
 
 ### CLI and deployment
 

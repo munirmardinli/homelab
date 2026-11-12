@@ -21,7 +21,7 @@ gitSetup() {
   git config --global pull.rebase true
   git config core.fileMode false
   if typeset -f configSync >/dev/null 2>&1; then
-    configSync zsh p10k paths
+    configSync zsh p10k
   fi
   echo "✅ Git: $full_name <$mail> + pull.rebase"
 }

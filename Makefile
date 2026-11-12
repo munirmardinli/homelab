@@ -13,7 +13,7 @@ export IMAC_REPO_DIR
 export DOCKER_STACK
 export DOCKER_ARGS
 
-.PHONY: help check paths zsh-install zsh-oh-my-zsh \
+.PHONY: help check zsh zsh-install zsh-oh-my-zsh \
 	bitwarden bitwarden-get generate ssh ssh-run ssh-key-setup \
 	compose compose-list compose-upload docker deploy pull \
 	settings settings-brew settings-git settings-tailscale settings-pull-schedule \
@@ -22,9 +22,9 @@ export DOCKER_ARGS
 help:
 	@printf '%s\n' \
 	  'Homelab Make targets:' \
-	  '  check                       Check shell syntax and JSON files' \
-	  '  paths                       Print directories configured in paths.json' \
-	  '  zsh-install                 Sync zsh, p10k and path config to your home directory' \
+	  '  check                       Check shell and Zsh syntax' \
+	  '  zsh                         Update ~/.zshrc from src/.config/zsh' \
+	  '  zsh-install                 Alias for zsh' \
 	  '  zsh-oh-my-zsh               Install Oh My Zsh (asks for confirmation)' \
 	  '  bitwarden                   Fetch Bitwarden secrets into the local generated file' \
 	  '  bitwarden-get SECRET_KEY=x  Print one value from the generated secrets file' \
@@ -48,19 +48,17 @@ help:
 
 check:
 	@find . -type f -name '*.sh' -not -path './.git/*' -print | while IFS= read -r file; do bash -n "$$file" || exit; done
-	@python3 -m json.tool src/.config/bash/paths.json >/dev/null
 	@if command -v zsh >/dev/null 2>&1; then \
 	  zsh -n src/.config/zsh && zsh -n src/.config/.p10k.zsh; \
 	else \
 	  echo 'zsh not installed; skipped Zsh syntax checks'; \
 	fi
-	@echo 'Shell and JSON checks passed.'
-
-paths:
-	@SETUP_PATHS_FILE="$$ROOT/src/.config/bash/paths.json" bash src/bash/paths.sh list
+	@echo 'Shell checks passed.'
 
 zsh-install:
-	@bash -c 'source "$$ROOT/src/bash/setup.sh"; configSync zsh p10k paths'
+	@bash -c 'source "$$ROOT/src/bash/setup.sh"; configSync zsh'
+
+zsh: zsh-install
 
 zsh-oh-my-zsh:
 	@command -v zsh >/dev/null 2>&1 || { echo 'zsh is required.' >&2; exit 127; }

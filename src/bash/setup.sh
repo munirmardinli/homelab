@@ -3,9 +3,6 @@ if [[ -n "${ZSH_VERSION:-}" ]]; then
 else
   _CONFIG_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 fi
-# shellcheck source=paths.sh
-source "$_CONFIG_ROOT/src/bash/paths.sh"
-
 _config_sync_file() {
   local src="$1" dest="$2" only_missing="${3:-}"
   if [[ ! -r "$src" ]]; then
@@ -21,28 +18,48 @@ _config_sync_file() {
 }
 
 configSync() {
-  local root
-  local SETUP_PATHS_FILE="$_CONFIG_ROOT/src/.config/bash/paths.json"
-  root="$(setup_root_from_paths)" || return 1
+  local root="$_CONFIG_ROOT" item tmp
   local -a items=("$@")
-  local item
 
   if ((${#items[@]} == 0)); then
-    items=(zsh p10k paths)
+    items=(zsh p10k)
   fi
 
   for item in "${items[@]}"; do
     case "$item" in
       zsh)
-        _config_sync_file "$root/src/.config/zsh" "$HOME/.zshrc"
+        tmp="$(mktemp "${TMPDIR:-/tmp}/homelab-zshrc.XXXXXX")" || return 1
+        if ! python3 - "$root/src/.config/zsh" "$root" >"$tmp" <<'PY'
+import shlex
+import sys
+from pathlib import Path
+
+source, root = Path(sys.argv[1]), sys.argv[2]
+try:
+    content = source.read_text(encoding="utf-8")
+except OSError as error:
+    print(f"❌ Cannot read Zsh config {source}: {error}", file=sys.stderr)
+    raise SystemExit(1)
+
+marker = "__HOMELAB_ROOT__"
+if content.count(marker) != 1:
+    print(f"❌ Expected exactly one {marker} marker in {source}.", file=sys.stderr)
+    raise SystemExit(1)
+sys.stdout.write(content.replace(marker, shlex.quote(root)))
+PY
+        then
+          rm -f "$tmp"
+          return 1
+        fi
+        chmod 644 "$tmp" || { rm -f "$tmp"; return 1; }
+        if ! _config_sync_file "$tmp" "$HOME/.zshrc"; then
+          rm -f "$tmp"
+          return 1
+        fi
+        rm -f "$tmp"
         ;;
       p10k)
         _config_sync_file "$root/src/.config/.p10k.zsh" "${XDG_CONFIG_HOME:-$HOME/.config}/.p10k.zsh"
-        ;;
-      paths)
-        local config_home="${XDG_CONFIG_HOME:-$HOME/.config}/homelab"
-        _config_sync_file "$root/src/bash/paths.sh" "$config_home/paths.sh"
-        _config_sync_file "$root/src/.config/bash/paths.json" "$config_home/paths.json"
         ;;
       *)
         echo "❌ unknown config: $item" >&2
@@ -54,7 +71,7 @@ configSync() {
 
 configSetup() {
   configSync "$@"
-  echo "✅ Config: ${*:-zsh, p10k, paths}"
+  echo "✅ Config: ${*:-zsh, p10k}"
 }
 
 alias zshconfig="nano \"$_CONFIG_ROOT/src/.config/zsh\""

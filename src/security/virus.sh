@@ -10,7 +10,7 @@ virus_main() {
   SEC_RAN_VIRUS=1
 
   scan_root="${IMAC_REPO_DIR:-$(env_val IMAC_REPO_DIR)}"
-  scan_root="${scan_root:-$HOMELAB_WORKSPACE}"
+  scan_root="${scan_root:-$ROOT_DIR}"
   scan_root="${scan_root/#\~/$HOME}"
 
   targets=()

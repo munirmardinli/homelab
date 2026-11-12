@@ -8,13 +8,8 @@ SEC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SEC_DIR/../.." && pwd)"
 # shellcheck source=../cli/bitwarden.sh
 source "$SEC_DIR/../cli/bitwarden.sh"
-# shellcheck source=../bash/paths.sh
-source "$ROOT_DIR/src/bash/paths.sh"
-SETUP_PATHS_FILE="$ROOT_DIR/src/.config/bash/paths.json"
-SETUP_ROOT="$(setup_root_from_paths)" || return 1
-HOMELAB_WORKSPACE="$(setup_path_value HOMELAB_WORKSPACE)" || return 1
+SETUP_ROOT="$ROOT_DIR"
 export SETUP_ROOT
-export HOMELAB_WORKSPACE
 LOG_DIR="$SETUP_ROOT/assets/logs/security"
 HTML_DIR="$SETUP_ROOT/assets/cli/reports"
 HTML_HOST="$HTML_DIR/host.html"
