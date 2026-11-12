@@ -31,7 +31,7 @@ services:
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --providers.docker.network=frontend
-      - --providers.file.directory=/etc/traefik/dynamic
+      - --providers.file.filename=/etc/traefik/dynamic/dynamic.yml
       - --providers.file.watch=true
       - --entrypoints.web.address=:80
       - --entrypoints.web.http.redirections.entrypoint.to=websecure

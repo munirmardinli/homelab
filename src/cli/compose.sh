@@ -161,7 +161,7 @@ compose_run_stack() {
   ssh_load || return 1
   compose_upload || return 1
   env_file="$(compose_env_file)" || return 1
-  ssh_run docker compose --env-file "$env_file" --project-name "$name" -f "$file" "${args[@]}"
+  ssh_run docker compose --project-directory "$DEPLOY_DIR" --env-file "$env_file" --project-name "$name" -f "$file" "${args[@]}"
 }
 
 compose_cli_docker() {
@@ -186,9 +186,9 @@ compose_apply() {
     echo ""
     echo "——— ${f} ———"
     env_file="$(compose_env_file)" || return 1
-    ssh_run docker compose --env-file "$env_file" --project-name "$project" -f "$f" stop || echo "ℹ️  stop: ${project} was not running"
-    ssh_run docker compose --env-file "$env_file" --project-name "$project" -f "$f" pull
-    ssh_run docker compose --env-file "$env_file" --project-name "$project" -f "$f" up -d
+    ssh_run docker compose --project-directory "$DEPLOY_DIR" --env-file "$env_file" --project-name "$project" -f "$f" stop || echo "ℹ️  stop: ${project} was not running"
+    ssh_run docker compose --project-directory "$DEPLOY_DIR" --env-file "$env_file" --project-name "$project" -f "$f" pull
+    ssh_run docker compose --project-directory "$DEPLOY_DIR" --env-file "$env_file" --project-name "$project" -f "$f" up -d
   done
   echo ""
   echo "✅ Docker update done."

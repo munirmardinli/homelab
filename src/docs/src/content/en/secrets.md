@@ -13,6 +13,8 @@ CI sets `BWS_ACCESS_TOKEN`. `bitwarden.sh` reads the `HomeLab` project (`BWS_PRO
 
 `DOCKER_FOLDER_PATH` may be relative to `IMAC_REPO_DIR` or already be an absolute host directory. The scripts resolve relative values at runtime without changing the Bitwarden value. If it is missing, `generate.sh` stops. Compose uses `${DOCKER_FOLDER_PATH?:Error - DOCKER_FOLDER_PATH is missing in Bitwarden}`.
 
+Compose runs with `IMAC_REPO_DIR` as its project directory so relative volume sources such as `data/generated/traefik.yml` resolve against the deployment repository rather than `src/docker`.
+
 ## Missing keys
 
 `generate_missing_keys` scans rendered templates in `src/.config` and Compose files in `src/docker` for `${NAME}`. Shell and editor configuration files are not treated as templates. Names containing `PASSWORD`, `TOKEN`, `SECRET`, `HASH`, `KEY`, or `API` are treated as secrets.
