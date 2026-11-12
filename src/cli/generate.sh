@@ -56,9 +56,10 @@ if env_path.is_file():
             continue
         have.add(line.split("=", 1)[0].strip())
 need = []
-files = []
-if config.is_dir():
-    files.extend(p for p in config.iterdir() if p.is_file())
+files = [
+    p for p in config.iterdir()
+    if p.is_file() and (p.suffix in {".yml", ".yaml", ".rb", ".toml"} or p.name == "http")
+] if config.is_dir() else []
 if docker.is_dir():
     files.extend(p for p in docker.iterdir() if p.is_file() and p.suffix in {".yml", ".yaml"})
 for path in sorted(files):
@@ -125,7 +126,11 @@ def repl(match):
     return match.group(0)
 
 stage.mkdir(parents=True, exist_ok=True)
-for src in sorted(p for p in config.iterdir() if p.is_file()):
+template_files = [
+    p for p in config.iterdir()
+    if p.is_file() and (p.suffix in {".yml", ".yaml", ".rb", ".toml"} or p.name == "http")
+]
+for src in sorted(template_files):
     text = pat.sub(repl, src.read_text(encoding="utf-8"))
     dest = stage / src.name
     if src.name == "traefik.yml":
@@ -211,17 +216,9 @@ PY
 }
 
 generate_place() {
-  local stage="$1" folder dest rel local_dest
+  local stage="$1" folder dest local_dest
   ssh_load || return 1
   folder="$(generate_folder)" || return 1
-  if [[ "$folder" != /* ]]; then
-    rel="${folder#./}"
-    folder="${DEPLOY_DIR}/${rel}"
-    bw_upsert DOCKER_FOLDER_PATH "$folder"
-  elif [[ "$folder" != "$DEPLOY_DIR" && "$folder" != "$DEPLOY_DIR/"* && "$folder" == "$ROOT/"* ]]; then
-    folder="${DEPLOY_DIR}/${folder#"$ROOT"/}"
-    bw_upsert DOCKER_FOLDER_PATH "$folder"
-  fi
   local_dest="${ROOT}/data/generated"
   if [[ -d "$folder" ]]; then
     local_dest="${folder}/generated"
@@ -239,12 +236,9 @@ generate_place() {
     echo "📝 gitlab.rb → ${local_dest}/gitlab.rb"
   fi
 
-  dest="${DEPLOY_DIR}/data/generated"
-  if [[ "$folder" == "$DEPLOY_DIR/"* ]]; then
-    dest="${folder}/generated"
-  fi
+  dest="${DOCKER_FOLDER_PATH}/generated"
   echo "📁 ${SSH_HOST}:${dest}"
-  local config_rb="${folder}/gitlab/config/gitlab.rb"
+  local config_rb="${DOCKER_FOLDER_PATH}/gitlab/config/gitlab.rb"
   COPYFILE_DISABLE=1 tar -C "$stage" -cf - . | ssh_run "mkdir -p $(printf %q "$dest") && tar -C $(printf %q "$dest") -xf - && chmod 700 $(printf %q "$dest") && chmod 600 $(printf %q "$dest")/* && mkdir -p $(printf %q "${config_rb%/*}") && cat $(printf %q "$dest/gitlab.rb") > $(printf %q "$config_rb")"
 }
 

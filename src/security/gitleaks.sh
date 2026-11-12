@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# gitleaks on SCAN_ROOT git repos. Writes repo/file/rule/line only — never secret values.
+# gitleaks on IMAC_REPO_DIR git repos. Writes repo/file/rule/line only — never secret values.
 
 gitleaks_scan() {
   local scan_root cfg label n repos
@@ -12,7 +12,7 @@ gitleaks_scan() {
   sec_log "=== gitleaks ==="
 
   : >"$GITLEAKS_TSV"
-  scan_root="${SCAN_ROOT:-$(env_val SCAN_ROOT)}"
+  scan_root="${IMAC_REPO_DIR:-$(env_val IMAC_REPO_DIR)}"
   scan_root="${scan_root:-$HOMELAB_WORKSPACE}"
   scan_root="${scan_root/#\~/$HOME}"
 
@@ -21,7 +21,7 @@ gitleaks_scan() {
     return 0
   fi
   if [[ ! -d "$scan_root" ]]; then
-    sec_warn "SCAN_ROOT" "missing: $scan_root"
+    sec_warn "IMAC_REPO_DIR" "missing: $scan_root"
     return 0
   fi
 

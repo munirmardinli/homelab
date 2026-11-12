@@ -25,7 +25,7 @@ security_usage() {
   cat <<'EOF'
 Usage: bash src/security/index.sh [virus|host|host-harden|github|gitleaks]
        make security [SECURITY_COMMAND=virus|host|host-harden|github|gitleaks]
-       make security-virus SCAN_ROOT=/path/to/scan
+       make security-virus IMAC_REPO_DIR=/path/to/scan
 
   (default)  host + github + virus + gitleaks → assets/cli/reports/*.html
   virus      ClamAV / LoveLetter / Trojans → assets/cli/reports/virus.html

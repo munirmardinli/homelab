@@ -11,11 +11,11 @@ Compose-Dateien enthalten keine Klartext-Passwörter. Platzhalter wie `${PRIVATE
 
 CI setzt `BWS_ACCESS_TOKEN`. `bitwarden.sh` liest das Projekt `HomeLab` (`BWS_PROJECT`) und schreibt Secrets nach `data/generated/bw` und auf dem Host nach `$DOCKER_FOLDER_PATH/generated/bw`.
 
-`DOCKER_FOLDER_PATH` ist ein absoluter Ordner auf dem Host. Fehlt er, bricht `generate.sh` ab. Compose nutzt `${DOCKER_FOLDER_PATH?:Error - DOCKER_FOLDER_PATH is missing in Bitwarden}`.
+`DOCKER_FOLDER_PATH` kann relativ zu `IMAC_REPO_DIR` oder bereits ein absoluter Ordner auf dem Host sein. Die Skripte lösen relative Werte zur Laufzeit auf, ohne den Bitwarden-Wert zu ändern. Fehlt er, bricht `generate.sh` ab. Compose nutzt `${DOCKER_FOLDER_PATH?:Error - DOCKER_FOLDER_PATH is missing in Bitwarden}`.
 
 ## Fehlende Schlüssel
 
-`generate_missing_keys` sucht in `src/.config` und `src/docker` nach `${NAME}`. Namen mit `PASSWORD`, `TOKEN`, `SECRET`, `HASH`, `KEY` oder `API` gelten als geheim.
+`generate_missing_keys` durchsucht gerenderte Vorlagen in `src/.config` und Compose-Dateien in `src/docker` nach `${NAME}`. Shell- und Editor-Konfigurationen gelten nicht als Vorlagen. Namen mit `PASSWORD`, `TOKEN`, `SECRET`, `HASH`, `KEY` oder `API` gelten als geheim.
 
 ## Auf dem Host
 

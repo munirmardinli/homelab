@@ -3,6 +3,3 @@ data/*
 assets/
 .DS_Store
 .vscode/
-!data/dashboard
-data/dashboard/db/backup
-data/dashboard/logs/*

@@ -9,7 +9,7 @@ virus_main() {
   SEC_SCOPE=virus
   SEC_RAN_VIRUS=1
 
-  scan_root="${SCAN_ROOT:-$(env_val SCAN_ROOT)}"
+  scan_root="${IMAC_REPO_DIR:-$(env_val IMAC_REPO_DIR)}"
   scan_root="${scan_root:-$HOMELAB_WORKSPACE}"
   scan_root="${scan_root/#\~/$HOME}"
 
@@ -126,7 +126,7 @@ virus_main() {
   fi
 
   if [[ ${#targets[@]} -eq 0 ]]; then
-    sec_warn "Virus targets" "none — pass paths or set SCAN_ROOT"
+    sec_warn "Virus targets" "none — pass paths or set IMAC_REPO_DIR"
     return 0
   fi
 

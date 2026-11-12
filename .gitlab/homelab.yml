@@ -21,7 +21,7 @@ deploy:compose:
     - export BWS_ACCESS_TOKEN=$BWS_ACCESS_TOKEN
     - bash src/cli/bitwarden.sh
     - bash src/cli/generate.sh
-    - export DOCKER_FOLDER_PATH="$(bash src/cli/bitwarden.sh get DOCKER_FOLDER_PATH)"
+    - DOCKER_FOLDER_PATH="$(bash src/cli/ssh.sh docker-folder)" && export DOCKER_FOLDER_PATH
     - bash src/cli/ssh.sh ssh_run bash src/cli/pull.sh
     - bash src/cli/ssh.sh ssh_run bash src/cli/generate.sh
     - bash src/cli/compose.sh upload

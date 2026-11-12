@@ -45,6 +45,7 @@ Run `make` or `make help` at the repository root to list the available commands.
 | `make ssh-run COMMAND="docker ps"` | Run a command through `src/cli/ssh.sh ssh_run`. |
 | `make compose-list` / `make compose-upload` | List selected stacks or upload without deploying; uploads and remote Compose commands are dispatched through `src/cli/ssh.sh`. |
 | `make compose COMPOSE_STACKS="traefik dashy"` | Deploy selected stack(s) over SSH; without the variable it deploys changed stacks. |
+| `make docker DOCKER_STACK=dashboard DOCKER_ARGS="up -d"` | Run a Docker Compose command for one stack; project name, env file, and `src/docker/<stack>.yml` are resolved automatically. |
 | `make deploy` | Run the full CLI deployment sequence. |
 | `make ssh-key-setup` | Create/show the local key **and reset `~/.ssh/known_hosts`**. |
 | `make pull` | Run `pull.sh`; when the worktree is clean it can commit and push changes. |
@@ -55,6 +56,6 @@ Run `make` or `make help` at the repository root to list the available commands.
 - `make settings-git` configures the global Git identity using the generated Bitwarden secrets.
 - `make settings-tailscale` enables IP forwarding and advertises the configured Tailscale routes.
 - `make settings-pull-schedule` reports the LaunchAgent status. Set `ACTION=install`, `remove`, or `run` to manage or run it.
-- `make security` runs all security checks. Set `SECURITY_COMMAND=host`, `host-harden`, `github`, `virus`, or `gitleaks` to run one check. For virus scans, set `SCAN_ROOT=/path/to/scan`; `host-harden` changes macOS firewall settings after confirmation.
+- `make security` runs all security checks. Set `SECURITY_COMMAND=host`, `host-harden`, `github`, `virus`, or `gitleaks` to run one check. For virus and gitleaks scans, `IMAC_REPO_DIR` from Bitwarden sets the repository scan path; you can override it with `IMAC_REPO_DIR=/path/to/scan`. `host-harden` changes macOS firewall settings after confirmation.
 
 Commands that install packages, modify system settings, reset SSH host keys, deploy services, or commit/push changes can have lasting effects. Review their output and prompts before confirming.

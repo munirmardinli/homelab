@@ -9,11 +9,13 @@ export ACTION
 export SECURITY_COMMAND
 export SECRET_KEY
 export COMPOSE_STACKS
-export SCAN_ROOT
+export IMAC_REPO_DIR
+export DOCKER_STACK
+export DOCKER_ARGS
 
 .PHONY: help check paths zsh-install zsh-oh-my-zsh \
 	bitwarden bitwarden-get generate ssh ssh-run ssh-key-setup \
-	compose compose-list compose-upload deploy pull \
+	compose compose-list compose-upload docker deploy pull \
 	settings settings-brew settings-git settings-tailscale settings-pull-schedule \
 	security security-host security-host-harden security-github security-virus security-gitleaks
 
@@ -33,6 +35,7 @@ help:
 	  '  compose [COMPOSE_STACKS=x]  SSH-deploy changed stacks, or the selected stack(s)' \
 	  '  compose-list                List Compose stacks selected for deployment' \
 	  '  compose-upload              Upload Compose/config files without deploying' \
+	  '  docker DOCKER_STACK=x DOCKER_ARGS="up -d"  Run a Compose command for one stack' \
 	  '  deploy                      Run the full CLI deployment sequence' \
 	  '  pull                        Run pull.sh (may commit and push repository changes)' \
 	  '  settings                    List settings targets' \
@@ -91,6 +94,11 @@ compose-list:
 
 compose-upload:
 	@bash src/cli/ssh.sh compose upload
+
+docker:
+	@test -n "$$DOCKER_STACK" || { echo 'Set DOCKER_STACK, e.g. make docker DOCKER_STACK=dashboard DOCKER_ARGS="up -d"' >&2; exit 2; }
+	@test -n "$$DOCKER_ARGS" || { echo 'Set DOCKER_ARGS, e.g. DOCKER_ARGS="up -d"' >&2; exit 2; }
+	@bash src/cli/compose.sh docker
 
 deploy:
 	@bash src/cli/deploy.sh

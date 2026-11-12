@@ -82,8 +82,9 @@ ssh_pin_docker_folder() {
   [[ -n "$folder" ]] || return 0
   if [[ "$folder" != /* ]]; then
     folder="${DEPLOY_DIR}/${folder#./}"
-    bw_upsert DOCKER_FOLDER_PATH "$folder"
   fi
+  DOCKER_FOLDER_PATH="$folder"
+  export DOCKER_FOLDER_PATH
 }
 
 ssh_exec() {
@@ -132,6 +133,10 @@ ssh_main() {
     compose)
       shift
       exec bash "$CLI_DIR/compose.sh" "$@"
+      ;;
+    docker-folder)
+      ssh_load || return 1
+      printf '%s\n' "$DOCKER_FOLDER_PATH"
       ;;
     "")
       ssh_run "echo logged-in && ls -la"

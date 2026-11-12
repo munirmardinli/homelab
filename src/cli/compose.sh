@@ -101,8 +101,8 @@ order_compose_files() {
 }
 
 compose_env_file() {
-  local folder
-  folder="$(bw_val DOCKER_FOLDER_PATH)"
+  local folder="${DOCKER_FOLDER_PATH:-}"
+  [[ -n "$folder" ]] || folder="$(bw_val DOCKER_FOLDER_PATH)"
   if [[ -z "$folder" ]]; then
     echo "❌ DOCKER_FOLDER_PATH is missing in Bitwarden" >&2
     return 1
@@ -134,6 +134,44 @@ compose_project() {
   name="${name%.yml}"
   name="${name%.yaml}"
   printf '%s' "$name"
+}
+
+compose_run_stack() {
+  local name="$1" file env_file
+  shift
+  local -a args=("$@")
+
+  if [[ ! "$name" =~ ^[A-Za-z0-9][A-Za-z0-9_-]*$ ]]; then
+    echo "❌ Invalid Compose stack name: ${name:-<empty>}" >&2
+    return 2
+  fi
+  if [[ -f "$ROOT/src/docker/${name}.yml" ]]; then
+    file="src/docker/${name}.yml"
+  elif [[ -f "$ROOT/src/docker/${name}.yaml" ]]; then
+    file="src/docker/${name}.yaml"
+  else
+    echo "❌ Compose stack not found: ${name}" >&2
+    return 1
+  fi
+  if ((${#args[@]} == 0)); then
+    echo 'Usage: make docker DOCKER_STACK=<name> DOCKER_ARGS="up -d"' >&2
+    return 2
+  fi
+
+  ssh_load || return 1
+  compose_upload || return 1
+  env_file="$(compose_env_file)" || return 1
+  ssh_run docker compose --env-file "$env_file" --project-name "$name" -f "$file" "${args[@]}"
+}
+
+compose_cli_docker() {
+  local -a args=()
+  if (($# > 0)); then
+    compose_run_stack "$@"
+  else
+    read -r -a args <<<"${DOCKER_ARGS:-}"
+    compose_run_stack "${DOCKER_STACK:-}" "${args[@]}"
+  fi
 }
 
 compose_apply() {
@@ -181,6 +219,10 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     upload)
       ssh_load || exit 1
       compose_upload
+      ;;
+    docker)
+      shift
+      compose_cli_docker "$@"
       ;;
     *)
       compose_main "$@"
