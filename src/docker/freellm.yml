@@ -1,0 +1,49 @@
+---
+x-labels: &default-labels
+  com.centurylinklabs.watchtower.enable: true
+  container.label.group: llm
+
+x-limits: &resource-limits
+  restart: unless-stopped
+  networks:
+    frontend:
+
+name: freellm    
+services:
+  freellm:
+    image: ghcr.io/tashfeenahmed/freellmapi:latest
+    container_name: freellm
+    hostname: freellm.${PRIVATE_DOMAIN}
+    platform: linux/amd64
+    <<: *resource-limits
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3001/api/ping').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      # openssl rand -hex 32
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY_FREELLM?:Error - ENCRYPTION_KEY_FREELLM is missing in Bitwarden}
+    volumes:
+      - type: bind
+        source: /etc/timezone
+        target: /etc/timezone
+        read_only: true
+      - type: bind
+        source: ${DOCKER_FOLDER_PATH?:Error - DOCKER_FOLDER_PATH is missing in Bitwarden}/freellm
+        target: /app/server/data
+    labels:
+      <<: *default-labels
+      monitoring: dashboard
+      traefik.enable: true
+      traefik.http.routers.freellm.rule: Host(`freellm.${PRIVATE_DOMAIN}`)
+      traefik.http.routers.freellm.entrypoints: websecure
+      traefik.http.routers.freellm.tls.certresolver: le
+      traefik.http.services.freellm.loadbalancer.server.port: 3001
+
+networks:
+  frontend:
+    external: true
